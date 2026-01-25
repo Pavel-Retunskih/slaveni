@@ -1,82 +1,35 @@
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Award, Star, Medal, Trophy } from "lucide-react"
+import { Award, Medal, Shield, Star, Trophy } from "lucide-react"
 import { FadeIn } from "@/components/fade-in"
+import { loadHonorees } from "@/helpers/loadHonorees"
 
-const honorees = [
-  {
-    name: "Барташевич Иван Николаевич",
-    position: "Директор",
-    department: "Руководство",
-    achievement: "Руководство предприятием, обеспечение стабильного развития и модернизации производства",
-    years: "Более 10 лет",
-    icon: Trophy,
-  },
-  {
-    name: "Ковалева Мария Александровна",
-    position: "Главный зоотехник",
-    department: "Животноводство",
-    achievement: "Внедрение современных методов содержания КРС, повышение продуктивности стада",
-    years: "15 лет",
-    icon: Star,
-  },
-  {
-    name: "Сидорович Петр Михайлович",
-    position: "Главный агроном",
-    department: "Растениеводство",
-    achievement: "Оптимизация севооборота, повышение урожайности зерновых культур",
-    years: "20 лет",
-    icon: Medal,
-  },
-  {
-    name: "Новикова Елена Владимировна",
-    position: "Оператор машинного доения",
-    department: "МТК «Славени-1»",
-    achievement: "Высокие показатели по надою молока, бережное отношение к животным",
-    years: "12 лет",
-    icon: Award,
-  },
-  {
-    name: "Козлов Андрей Сергеевич",
-    position: "Механизатор",
-    department: "Механизация",
-    achievement: "Отличное обслуживание техники, высокая производительность на полевых работах",
-    years: "18 лет",
-    icon: Medal,
-  },
-  {
-    name: "Михайлова Татьяна Петровна",
-    position: "Ветеринарный врач",
-    department: "Ветеринарная служба",
-    achievement: "Обеспечение здоровья поголовья, профилактика заболеваний",
-    years: "10 лет",
-    icon: Star,
-  },
-  {
-    name: "Борисов Виктор Иванович",
-    position: "Бригадир животноводов",
-    department: "МТК «Беланово»",
-    achievement: "Организация работы бригады, ввод в эксплуатацию нового комплекса",
-    years: "8 лет",
-    icon: Award,
-  },
-  {
-    name: "Федорова Анна Николаевна",
-    position: "Телятница",
-    department: "МТК «Славени-2»",
-    achievement: "Высокие показатели сохранности молодняка, ответственный подход к работе",
-    years: "14 лет",
-    icon: Medal,
-  },
+const departmentIconMap: { test: (value: string) => boolean; icon: typeof Award }[] = [
+  { test: (value) => /руковод/i.test(value), icon: Trophy },
+  { test: (value) => /агро|раст/i.test(value), icon: Medal },
+  { test: (value) => /животн|мтк|ферм/i.test(value), icon: Star },
+  { test: (value) => /ветерин|безопас/i.test(value), icon: Shield },
 ]
 
-export default function HonorBoardPage() {
+function pickDepartmentIcon(department?: string | null) {
+  if (!department) {
+    return Award
+  }
+
+  const normalized = department.trim()
+  const match = departmentIconMap.find(({ test }) => test(normalized))
+
+  return match?.icon ?? Award
+}
+
+export default async function HonorBoardPage() {
+  const honorees = await loadHonorees()
+
   return (
     <main className="font-sans">
       <Header />
-      
+
       <section className="pt-32 pb-16 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeIn className="text-center mb-12">
@@ -85,7 +38,7 @@ export default function HonorBoardPage() {
               Доска почета
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              Лучшие работники ЗАО «Большие Славени», чей труд и преданность делу 
+              Лучшие работники ЗАО «Большие Славени», чей труд и преданность делу
               обеспечивают успех нашего предприятия
             </p>
           </FadeIn>
@@ -100,7 +53,10 @@ export default function HonorBoardPage() {
                 <Card className="group hover:shadow-xl transition-all hover:-translate-y-2 border-border/50 h-full">
                   <CardContent className="p-6 text-center">
                     <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <person.icon className="w-10 h-10 text-primary" />
+                      {(() => {
+                        const Icon = pickDepartmentIcon(person.department)
+                        return <Icon className="w-10 h-10 text-primary" />
+                      })()}
                     </div>
                     <h3 className="font-serif text-lg font-semibold text-foreground mb-1">
                       {person.name}
@@ -126,8 +82,8 @@ export default function HonorBoardPage() {
                 Признание заслуг
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                ЗАО «Большие Славени» ценит каждого работника. Лучшие сотрудники регулярно 
-                отмечаются благодарностями, премиями и наградами за высокие производственные 
+                ЗАО «Большие Славени» ценит каждого работника. Лучшие сотрудники регулярно
+                отмечаются благодарностями, премиями и наградами за высокие производственные
                 показатели и добросовестный труд.
               </p>
             </div>
@@ -135,7 +91,6 @@ export default function HonorBoardPage() {
         </div>
       </section>
 
-      <Footer />
     </main>
   )
 }
