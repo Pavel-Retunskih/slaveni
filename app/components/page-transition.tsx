@@ -1,6 +1,6 @@
 "use client"
 
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, type Variants } from "framer-motion"
 import { usePathname } from "next/navigation"
 import type { ReactNode } from "react"
 
@@ -8,7 +8,9 @@ interface PageTransitionProps {
   children: ReactNode
 }
 
-const pageVariants = {
+const easingCurve = [0.25, 0.46, 0.45, 0.94] as const
+
+const pageVariants: Variants = {
   initial: {
     opacity: 0,
     y: 20,
@@ -20,7 +22,7 @@ const pageVariants = {
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: easingCurve,
       when: "beforeChildren",
     },
   },
@@ -30,12 +32,12 @@ const pageVariants = {
     scale: 0.98,
     transition: {
       duration: 0.3,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: easingCurve,
     },
   },
 }
 
-const overlayVariants = {
+const overlayVariants: Variants = {
   initial: {
     scaleY: 0,
     originY: 0,
@@ -45,7 +47,7 @@ const overlayVariants = {
     originY: [0, 0, 1, 1],
     transition: {
       duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94],
+      ease: easingCurve,
       times: [0, 0.4, 0.6, 1],
     },
   },
