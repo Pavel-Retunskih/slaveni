@@ -1,30 +1,21 @@
-import { notFound } from "next/navigation"
-import { HttpError, httpClient } from "@/shared/api/http/httpClient"
-import { type NewsDocument } from "@/shared/api/db/models/News"
+import { loadNewsById } from "@/helpers/loadNews"
+import { loadNews } from "@/helpers/loadNews"
+
+export async function generateStaticParams() {
+    const news = await loadNews()
+    return news.featuredNews.map((news) => ({
+        id: news.id
+    }))
+}
 
 export default async function NewsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
+    const news = await loadNewsById(id)
 
-    if (!id) {
-        notFound()
-    }
-
-    try {
-        const { news } = await httpClient<{ news: NewsDocument }>("/api/news/getOne", {
-            searchParams: { id },
-        })
-
-        return (
-            <>
-                <div>{news.title}</div>
-                <div>{news.id}</div>
-            </>
-        )
-    } catch (error) {
-        if (error instanceof HttpError && error.status === 404) {
-            notFound()
-        }
-
-        throw error
-    }
+    return (
+        <>
+            <div>{news.title}</div>
+            <div>{news.id}</div>
+        </>
+    )
 }

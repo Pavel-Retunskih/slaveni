@@ -4,8 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, ArrowRight } from "lucide-react"
 import { FadeIn } from "@/components/fade-in"
-import { httpClient } from "@/shared/api/http/httpClient"
-import { NewsDocument } from "@/shared/api/db/models/News"
+import { loadNews } from "@/helpers/loadNews"
 
 function formatDate(dateString: string) {
   const date = new Date(dateString)
@@ -18,11 +17,7 @@ function formatDate(dateString: string) {
 
 export default async function NewsPage() {
 
-  const { news } = await httpClient<{ news: NewsDocument[] }>("/api/news/getAll", {
-    cache: "no-store",
-  })
-  const featuredNews = news.filter((n) => n.featured)
-  const regularNews = news.filter((n) => !n.featured)
+  const { featuredNews, regularNews } = await loadNews()
 
   return (
     <main className="font-sans">

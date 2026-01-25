@@ -25,6 +25,6 @@ newsSchema.set("toJSON", {
     }
 })
 
-export const News = mongoose.models.News || mongoose.model<NewsDocument>("News", newsSchema);
+export const News: mongoose.Model<NewsDocument> = mongoose.models.News || mongoose.model<NewsDocument>("News", newsSchema);
 
 export type NewsDocument = InferSchemaType<typeof newsSchema>
