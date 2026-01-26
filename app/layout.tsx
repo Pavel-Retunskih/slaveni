@@ -52,8 +52,8 @@ export default function RootLayout({
           }}
         />
         <noscript>
-          <div>
-            <img src={`https://mc.yandex.ru/watch/${process.env.NEXT_PUBLIC_YA_METRIKA_ID ?? ""}`} style={{ position: "absolute", left: "-9999px" }} alt="" />
+          <div style={{ display: "none" }}>
+            <img src={`https://mc.yandex.ru/watch/${process.env.NEXT_PUBLIC_YA_METRIKA_ID ?? ""}`} style={{ position: "absolute", left: "-9999px", width: 0, height: 0, overflow: "hidden" }} alt="" />
           </div>
         </noscript>
         <LenisProvider>
