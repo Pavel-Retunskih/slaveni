@@ -7,10 +7,12 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     if (!session) {
         return redirect("/admin/login")
     }
-    return <div className="flex w-full h-full min-h-full max-w-6xl gap-8 p-4">
+    return <div className="flex w-full h-full min-h-full gap-8 p-4">
         <AdminAside />
 
-        {children}
+        <div className="flex-1 min-w-0">
+            {children}
+        </div>
         <div />
     </div>
 }
