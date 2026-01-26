@@ -1,13 +1,13 @@
 import mongoose, { InferSchemaType } from "mongoose";
 
 const newsSchema = new mongoose.Schema({
-    title: String,
-    category: String,
-    excerpt: String,
-    featured: Boolean,
-    id: String,
-    createdAt: String,
-    updatedAt: String
+    title: { type: String, required: true },
+    category: { type: String, required: true },
+    excerpt: { type: String, required: true },
+    featured: { type: Boolean, required: true },
+    id: { type: String, required: true },
+    createdAt: { type: String, required: true },
+    updatedAt: { type: String, required: true }
 
 }, { timestamps: true })
 
