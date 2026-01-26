@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     try {
         await dbConnect()
         const currentNews = await News.findById(id)
-        console.log(currentNews)
+
         if (!currentNews) {
             return Response.json(
                 { error: "News not found" },

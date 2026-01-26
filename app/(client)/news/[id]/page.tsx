@@ -1,5 +1,5 @@
-import { loadNewsById } from "@/helpers/loadNews"
-import { loadNews } from "@/helpers/loadNews"
+import { loadNewsById } from "@/shared/helpers/loadNews"
+import { loadNews } from "@/shared/helpers/loadNews"
 
 export async function generateStaticParams() {
     const news = await loadNews()

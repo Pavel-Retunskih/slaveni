@@ -2,10 +2,10 @@ import React from "react"
 import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { LenisProvider } from '@/components/lenis-provider'
-import './styles/globals.css'
+import { LenisProvider } from '@/shared/components/lenis-provider'
+import '..//styles/globals.css'
 import 'lenis/dist/lenis.css'
-import { Footer } from "./components/footer"
+
 
 const _inter = Inter({ subsets: ["latin", "cyrillic"] });
 const _playfair = Playfair_Display({ subsets: ["latin", "cyrillic"] });

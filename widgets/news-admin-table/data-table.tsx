@@ -14,7 +14,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/shared/components/ui/table"
 import { useRouter } from "next/navigation"
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]

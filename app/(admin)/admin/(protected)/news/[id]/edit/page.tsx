@@ -1,4 +1,4 @@
-import { loadNewsById } from "@/helpers/loadNews"
+import { loadNewsById } from "@/shared/helpers/loadNews"
 
 export default async function NewsIdEditPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params

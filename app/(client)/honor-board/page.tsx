@@ -1,9 +1,9 @@
-import { Header } from "@/components/header"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Header } from "@/shared/components/header"
+import { Card, CardContent } from "@/shared/components/ui/card"
+import { Badge } from "@/shared/components/ui/badge"
 import { Award, Medal, Shield, Star, Trophy } from "lucide-react"
-import { FadeIn } from "@/components/fade-in"
-import { loadHonorees } from "@/helpers/loadHonorees"
+import { FadeIn } from "@/shared/components/fade-in"
+import { loadHonorees } from "@/shared/helpers/loadHonorees"
 
 const departmentIconMap: { test: (value: string) => boolean; icon: typeof Award }[] = [
   { test: (value) => /руковод/i.test(value), icon: Trophy },

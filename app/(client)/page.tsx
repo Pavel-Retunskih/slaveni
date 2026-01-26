@@ -1,12 +1,11 @@
-import { Header } from "@/components/header"
-import { Hero } from "@/components/hero"
-import { About } from "@/components/about"
-import { Services } from "@/components/services"
-import { Products } from "@/components/products"
-import { Team } from "@/components/team"
-import { Contact } from "@/components/contact"
-import { Footer } from "@/components/footer"
-import { StackingSection } from "@/components/stacking-section"
+import { Header } from "@/shared/components/header"
+import { Hero } from "@/shared/components/hero"
+import { About } from "@/shared/components/about"
+import { Services } from "@/shared/components/services"
+import { Products } from "@/shared/components/products"
+import { Team } from "@/shared/components/team"
+import { Contact } from "@/shared/components/contact"
+import { StackingSection } from "@/shared/components/stacking-section"
 
 const TOTAL_SECTIONS = 6
 

@@ -1,8 +1,8 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/shared/components/ui/button"
 import { ArrowRight } from "lucide-react"
-import { ParallaxLayer } from "@/components/parallax-layer"
+import { ParallaxLayer } from "@/shared/components/parallax-layer"
 
 export function Hero() {
   return (
@@ -23,7 +23,7 @@ export function Hero() {
           ЗАО «Большие Славени»
         </h1>
         <p className="mt-6 text-lg sm:text-xl text-white/90 max-w-3xl mx-auto text-pretty">
-          Сельскохозяйственное предприятие Могилевской области, специализирующееся на производстве 
+          Сельскохозяйственное предприятие Могилевской области, специализирующееся на производстве
           продукции мясомолочного скотоводства с развитым зерновым хозяйством.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">

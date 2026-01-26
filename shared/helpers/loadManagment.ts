@@ -6,7 +6,6 @@ export async function loadManagment() {
 
     const managementDocs = await Management.find()
     const managenentCount = await Management.countDocuments()
-    console.log(managenentCount)
 
     const management = managementDocs.map((doc) => doc.toJSON())
     const director = management.find((m) => m.isDirector)

@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import { cn } from "@/lib/utils"
-import { useLenis } from "@/components/lenis-provider"
+import { cn } from "@/shared/lib/utils"
+import { useLenis } from "@/shared/components/lenis-provider"
 
 interface ParallaxLayerProps {
   speed?: number

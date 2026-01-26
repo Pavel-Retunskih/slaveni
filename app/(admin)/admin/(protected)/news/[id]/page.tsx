@@ -1,4 +1,4 @@
-import { loadNewsById } from "@/helpers/loadNews"
+import { loadNewsById } from "@/shared/helpers/loadNews"
 import Link from "next/link"
 
 export default async function NewsIdPage({ params }: { params: Promise<{ id: string }> }) {
