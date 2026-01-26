@@ -29,9 +29,8 @@ export default function RootLayout({
     <html lang="ru">
       <body className={`font-sans antialiased overflow-x-hidden`}>
         <LenisProvider>
-            {children}
+          {children}
         </LenisProvider>
-          <Footer />
         <Analytics />
       </body>
     </html>

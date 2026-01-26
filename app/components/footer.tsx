@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { Wheat } from "lucide-react"
-
 const footerLinks = {
   company: [
     { href: "/", label: "О предприятии" },
@@ -18,6 +17,8 @@ const footerLinks = {
 }
 
 export function Footer() {
+
+
   return (
     <footer className="bg-foreground text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
