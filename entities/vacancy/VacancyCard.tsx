@@ -1,8 +1,8 @@
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader } from "@/shared/components/ui/card"
+import { Badge } from "@/shared/components/ui/badge"
 import { Banknote, Clock, Briefcase, MapPin } from "lucide-react"
-import { VacancyDTO } from "@/helpers/loadVacancies"
+import { VacancyDTO } from "@/shared/helpers/loadVacancies"
 import { ReactNode } from "react"
 type Props = {
     vacancy: VacancyDTO

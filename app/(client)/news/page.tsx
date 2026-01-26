@@ -1,10 +1,10 @@
 import Link from "next/link"
-import { Header } from "@/components/header"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Header } from "@/shared/components/header"
+import { Card, CardContent, CardHeader } from "@/shared/components/ui/card"
+import { Badge } from "@/shared/components/ui/badge"
 import { Calendar, ArrowRight } from "lucide-react"
-import { FadeIn } from "@/components/fade-in"
-import { loadNews } from "@/helpers/loadNews"
+import { FadeIn } from "@/shared/components/fade-in"
+import { loadNews } from "@/shared/helpers/loadNews"
 
 function formatDate(dateString: string) {
   const date = new Date(dateString)

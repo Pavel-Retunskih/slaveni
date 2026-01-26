@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Menu, X, Wheat } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/shared/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -23,7 +23,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           <Link href="/" className="flex items-center gap-2">
-      <Image src="/images/logo.png" alt="Logo" width={64} height={64} />
+            <Image src="/images/logo.png" alt="Logo" width={64} height={64} />
             <span className="font-serif text-lg md:text-xl font-semibold text-foreground">Большие Славени</span>
           </Link>
 

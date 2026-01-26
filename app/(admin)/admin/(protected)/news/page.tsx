@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/shared/auth/options"
 import { redirect } from "next/navigation"
-import { loadNews } from "@/helpers/loadNews"
+import { loadNews } from "@/shared/helpers/loadNews"
 import type { NewsArticle } from "@/widgets/news-admin-table/columns"
 import { NewsAdminTable } from "@/widgets/news-admin-table/NewsAdminTable"
 

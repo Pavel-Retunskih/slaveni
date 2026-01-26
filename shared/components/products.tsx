@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 
 const products = [
@@ -49,7 +48,7 @@ export function Products() {
 
         <div className="grid lg:grid-cols-2 gap-8 items-stretch">
           <div
-            className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[500px] rounded-lg overflow-hidden bg-cover bg-center"
+            className="relative aspect-4/3 lg:aspect-auto lg:min-h-[500px] rounded-lg overflow-hidden bg-cover bg-center"
             style={{ backgroundImage: `url('${products[activeProduct].image}')` }}
           >
             <div className="absolute inset-0 bg-foreground/30" />
@@ -67,11 +66,10 @@ export function Products() {
                 key={product.id}
                 type="button"
                 onClick={() => setActiveProduct(index)}
-                className={`flex items-start gap-4 p-6 rounded-lg border text-left transition-all ${
-                  activeProduct === index
-                    ? "border-primary bg-primary/5 shadow-md"
-                    : "border-border bg-card hover:border-primary/50"
-                }`}
+                className={`flex items-start gap-4 p-6 rounded-lg border text-left transition-all ${activeProduct === index
+                  ? "border-primary bg-primary/5 shadow-md"
+                  : "border-border bg-card hover:border-primary/50"
+                  }`}
               >
                 <div
                   className="w-20 h-20 rounded-lg bg-cover bg-center shrink-0"

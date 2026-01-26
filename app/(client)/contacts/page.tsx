@@ -1,7 +1,7 @@
-import { Header } from "@/components/header"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Header } from "@/shared/components/header"
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { Phone, Mail, MapPin, Building2, FileText, ShoppingCart, Scale, Users } from "lucide-react"
-import { FadeIn } from "@/components/fade-in"
+import { FadeIn } from "@/shared/components/fade-in"
 
 const contactSections = [
     {
@@ -85,7 +85,7 @@ export default function ContactsPage() {
                             <Card className="border-primary/20">
                                 <CardContent className="py-8">
                                     <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                                        <div className="flex-shrink-0">
+                                        <div className="shrink-0">
                                             <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
                                                 <MapPin className="w-8 h-8 text-primary" />
                                             </div>
@@ -158,7 +158,7 @@ export default function ContactsPage() {
                                                     >
                                                         {contact.type === "phone" ? (
                                                             <>
-                                                                <Phone className="w-4 h-4 text-primary flex-shrink-0" />
+                                                                <Phone className="w-4 h-4 text-primary shrink-0" />
                                                                 <a
                                                                     href={`tel:${contact.value.replace(/\s/g, "")}`}
                                                                     className="text-sm hover:text-primary transition-colors"
@@ -168,7 +168,7 @@ export default function ContactsPage() {
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <Mail className="w-4 h-4 text-primary flex-shrink-0" />
+                                                                <Mail className="w-4 h-4 text-primary shrink-0" />
                                                                 <a
                                                                     href={`mailto:${contact.value}`}
                                                                     className="text-sm hover:text-primary transition-colors break-all"

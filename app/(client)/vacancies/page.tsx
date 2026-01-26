@@ -1,5 +1,5 @@
-import { Header } from "@/components/header"
-import { Button } from "@/components/ui/button"
+import { Header } from "@/shared/components/header"
+import { Button } from "@/shared/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -7,10 +7,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/shared/components/ui/dialog"
 import { Phone, Mail } from "lucide-react"
-import { FadeIn } from "@/components/fade-in"
-import { loadVacancies } from "@/helpers/loadVacancies"
+import { FadeIn } from "@/shared/components/fade-in"
+import { loadVacancies } from "@/shared/helpers/loadVacancies"
 import { VacancyCard } from "@/entities/vacancy/VacancyCard"
 import { VacancyForm } from "@/features/VacancyForm"
 

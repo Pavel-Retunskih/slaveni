@@ -1,14 +1,13 @@
-import { Header } from "@/components/header"
-import { Card, CardContent } from "@/components/ui/card"
+import { Header } from "@/shared/components/header"
+import { Card, CardContent } from "@/shared/components/ui/card"
 import { Phone, Mail, Building2 } from "lucide-react"
-import { FadeIn } from "@/components/fade-in"
-import { loadManagment } from "@/helpers/loadManagment"
+import { FadeIn } from "@/shared/components/fade-in"
+import { loadManagment } from "@/shared/helpers/loadManagment"
 import { SpecialistCard } from "@/entities/managment/SpecialistCard"
 import { DirectorCard } from "@/entities/managment/DirectorCard"
 
 export default async function ManagementPage() {
   const { director, specialists } = await loadManagment()
-  console.log(specialists)
 
   return (
     <div className="min-h-screen bg-background">

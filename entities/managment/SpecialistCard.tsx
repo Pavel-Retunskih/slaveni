@@ -1,6 +1,6 @@
 import { ManagementDocument } from "@/shared/api/db/models/Management"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/shared/components/ui/card"
+import { Badge } from "@/shared/components/ui/badge"
 import Image from "next/image"
 
 export const SpecialistCard = ({ specialist }: { specialist: ManagementDocument }) => {

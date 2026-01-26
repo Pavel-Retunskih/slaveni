@@ -1,4 +1,4 @@
-import { Footer } from "@/components/footer";
+import { Footer } from "@/shared/components/footer";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
     return <>{children}
