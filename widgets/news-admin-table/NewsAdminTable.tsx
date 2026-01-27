@@ -12,7 +12,7 @@ export const NewsAdminTable = ({ data }: NewsAdminTableProps) => {
         <DataTable
             columns={newsColumns}
             data={data}
-            getRowHref={(row) => `/admin/news/${row.id}`}
+            getRowHref={(row) => `/admin/news/${row.id}/edit`}
         />
     )
 }

@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+body {
+  --tt-toolbar-height: 44px;
+  --tt-theme-text: var(--tt-gray-light-900);
+
+  // theme switch support (when .dark на <html> или <body>)
+  .dark &,
+  &.dark,
+  html.dark & {
+    --tt-theme-text: var(--tt-gray-dark-900);
+  }
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--tt-theme-text);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  padding: 0;
+  overscroll-behavior-y: none;
+}
+
+html,
+body {
+  overscroll-behavior-x: none;
+}
+
+html,
+body,
+#root,
+#app {
+  height: 100%;
+  background-color: var(--tt-bg-color);
+  color: var(--tt-theme-text);
+}
+
+::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--tt-scrollbar-color) transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--tt-scrollbar-color);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tiptap.ProseMirror,
+.simple-editor-content .ProseMirror {
+  font-family: "DM Sans", sans-serif;
+  color: var(--tt-theme-text);
+  background-color: var(--tt-bg-color);
+}
+
+.simple-editor-wrapper {
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--tt-bg-color);
+  color: var(--tt-theme-text);
+}
+
+.simple-editor-content {
+  max-width: 648px;
+  width: 100%;
+  margin: 0 auto;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  color: var(--tt-theme-text);
+}
+
+.simple-editor-content .ProseMirror.simple-editor,
+.simple-editor-content .ProseMirror {
+  min-height: 100%;
+  color: var(--tt-theme-text);
+  background-color: var(--tt-bg-color);
+  padding: 3rem 3rem 30vh;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 480px) {
+  .simple-editor-content .ProseMirror {
+    padding: 1rem 1.5rem 1rem;
+  }
+}

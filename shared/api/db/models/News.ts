@@ -1,21 +1,22 @@
 import mongoose, { InferSchemaType } from "mongoose";
 
-const newsSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    category: { type: String, required: true },
-    excerpt: { type: String, required: true },
-    featured: { type: Boolean, required: true },
-    id: { type: String, required: true },
-    createdAt: { type: String, required: true },
-    updatedAt: { type: String, required: true }
-
-}, { timestamps: true })
+const newsSchema = new mongoose.Schema(
+    {
+        title: { type: String, required: true },
+        category: { type: String, required: true },
+        excerpt: { type: String, required: true },
+        content: { type: String, default: "" },
+        images: [{ type: String }],
+        featured: { type: Boolean, default: false },
+    },
+    { timestamps: true },
+)
 
 newsSchema.set("toJSON", {
     virtuals: true,
     versionKey: false,
     transform: (_doc, ret) => {
-        const typedRet = ret as typeof ret & { _id?: mongoose.Types.ObjectId }
+        const typedRet = ret as typeof ret & { _id?: mongoose.Types.ObjectId; id?: string }
 
         if (typedRet._id) {
             typedRet.id = typedRet._id.toString()
@@ -28,3 +29,15 @@ newsSchema.set("toJSON", {
 export const News: mongoose.Model<NewsDocument> = mongoose.models.News || mongoose.model<NewsDocument>("News", newsSchema);
 
 export type NewsDocument = InferSchemaType<typeof newsSchema>
+
+export type NewsJSON = {
+    id: string
+    title: string
+    category: string
+    excerpt: string
+    content: string
+    images: string[]
+    featured: boolean
+    createdAt: Date
+    updatedAt: Date
+}

@@ -10,7 +10,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
     return (
         <AdminSessionProvider session={session}>
-            <main className="h-dvh bg-gray-900 text-white px-4 py-2">
+            <main className="h-dvh bg-gray-900 text-white px-4 py-2" >
                 {children}
             </main>
         </AdminSessionProvider>

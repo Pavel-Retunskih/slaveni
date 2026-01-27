@@ -10,7 +10,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     return <div className="flex w-full h-full min-h-full gap-8 p-4">
         <AdminAside />
 
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 overflow-auto" data-lenis-prevent>
             {children}
         </div>
         <div />

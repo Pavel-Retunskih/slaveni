@@ -1,5 +1,5 @@
 import { dbConnect } from "@/shared/api/db/client"
-import { News } from "@/shared/api/db/models/News"
+import { News, type NewsJSON } from "@/shared/api/db/models/News"
 import { notFound } from "next/navigation"
 
 export async function loadNews() {
@@ -7,7 +7,7 @@ export async function loadNews() {
 
     const newsDocs = await News.find()
 
-    const news = newsDocs.map((doc) => doc.toJSON())
+    const news = newsDocs.map((doc) => doc.toJSON() as unknown as NewsJSON)
 
     const featuredNews = news.filter((item) => item.featured)
     const regularNews = news.filter((item) => !item.featured)
