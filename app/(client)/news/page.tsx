@@ -6,7 +6,7 @@ import { Calendar, ArrowRight } from "lucide-react"
 import { FadeIn } from "@/shared/components/fade-in"
 import { loadNews } from "@/shared/helpers/loadNews"
 
-function formatDate(dateString: string) {
+function formatDate(dateString: string | NativeDate) {
   const date = new Date(dateString)
   return date.toLocaleDateString("ru-RU", {
     day: "numeric",
