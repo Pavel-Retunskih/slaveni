@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next"
 
 import { AdminSessionProvider } from "./admin-session-provider"
 import { authOptions } from "@/shared/auth/options"
-import { redirect } from "next/navigation"
+import { InitTheme } from "./init-theme"
 
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -10,7 +10,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
     return (
         <AdminSessionProvider session={session}>
-            <main className="h-dvh bg-gray-900 text-white px-4 py-2" >
+            <InitTheme />
+            <main className="h-dvh bg-gray-900 dark:bg-gray-950 text-white px-4 py-2" >
                 {children}
             </main>
         </AdminSessionProvider>
