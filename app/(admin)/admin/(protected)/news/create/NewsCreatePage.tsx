@@ -1,37 +1,27 @@
 "use client"
-import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { NewsForm } from "@/features/news/NewsForm"
+import { resolveApiResponse } from "@/shared/helpers/apiResponse"
 import type { NewsFormPayload } from "@/shared/types/news"
 
 export const NewsCreatePageClient = () => {
     const router = useRouter()
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const onSubmit = async (data: NewsFormPayload) => {
-        setIsSubmitting(true)
-        try {
-            const response = await fetch("/api/news/create", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            })
+        const response = await fetch("/api/news/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
 
-            if (!response.ok) {
-                throw new Error("Failed to create news")
-            }
+        await resolveApiResponse<{ news: unknown }>(response)
 
-            router.push("/admin/news")
-            router.refresh()
-        } catch (error) {
-            console.error("Error creating news:", error)
-        } finally {
-            setIsSubmitting(false)
-        }
+        router.push("/admin/news")
+        router.refresh()
     }
     return <div className="h-full flex flex-col">
         <div className="flex items-center gap-4 mb-6">
@@ -47,7 +37,6 @@ export const NewsCreatePageClient = () => {
         <div className="flex-1 overflow-auto">
             <NewsForm
                 onSubmitAction={onSubmit}
-                isSubmitting={isSubmitting}
             />
         </div>
     </div>

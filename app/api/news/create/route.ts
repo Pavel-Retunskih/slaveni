@@ -1,9 +1,10 @@
 import { dbConnect } from "@/shared/api/db/client"
 import { News } from "@/shared/api/db/models/News"
 import { checkAuth } from "@/shared/helpers/checkAuth"
-import { Validator } from "@/shared/helpers/Validator"
+import { createErrorResponse, createSuccessResponse } from "@/shared/helpers/apiResponse"
 import type { NewsFormPayload } from "@/shared/types/news"
 import { del } from "@vercel/blob"
+import mongoose from "mongoose"
 
 export async function POST(request: Request) {
     await checkAuth()
@@ -12,13 +13,6 @@ export async function POST(request: Request) {
     try {
         await dbConnect()
         const body: NewsFormPayload = await request.json()
-
-        if (!Validator.validateNewsCreate(body)) {
-            return Response.json(
-                { error: "Invalid news data" },
-                { status: 400 },
-            )
-        }
 
         const { title, excerpt, content, category, featured, images = [], uploadPathnames = [] } = body
         tempUploadPathnames = uploadPathnames
@@ -32,15 +26,8 @@ export async function POST(request: Request) {
             images,
         })
 
-        return Response.json(
-            {
-                success: true,
-                news: news.toJSON(),
-            },
-            { status: 201 },
-        )
+        return Response.json(createSuccessResponse({ news: news.toJSON() }), { status: 201 })
     } catch (error) {
-        console.error("Failed to create news:", error)
         await Promise.all(
             tempUploadPathnames.map(async (pathname) => {
                 try {
@@ -49,10 +36,39 @@ export async function POST(request: Request) {
                     console.error("Failed to delete blob:", cleanupError)
                 }
             }),
+
         )
 
-        return Response.json({
-            error: "Failed to create news: " + (error instanceof Error ? error.message : String(error)),
-        }, { status: 500 })
+        if (error instanceof mongoose.Error.ValidationError) {
+            const fields = Object.entries(error.errors).reduce<Record<string, { message: string }>>(
+                (acc, [field, validatorError]) => {
+                    const message =
+                        typeof validatorError.message === "string"
+                            ? validatorError.message
+                            : "Ошибка валидации"
+
+                    acc[field] = { message }
+                    return acc
+                },
+                {},
+            )
+
+            return Response.json(
+                createErrorResponse({
+                    code: "validation_error",
+                    message: "Ошибка валидации",
+                    fields,
+                }),
+                { status: 400 },
+            )
+        }
+
+        return Response.json(
+            createErrorResponse({
+                code: "news_create_failed",
+                message: "Не удалось создать новость: " + (error instanceof Error ? error.message : String(error)),
+            }),
+            { status: 500 },
+        )
     }
 }

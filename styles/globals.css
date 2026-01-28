@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
-@import './_keyframe-animations.scss';
-@import './_variables.scss';
+@import 'ckeditor5/ckeditor5.css';
 
 
 @custom-variant dark (&:is(.dark *));
@@ -127,4 +126,328 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* CKEditor custom theme variables */
+:root {
+  --ck-border-radius: 0.5rem;
+  --ck-font-size-base: 14px;
+
+  /* Editor colors */
+  --ck-color-base-background: var(--card);
+  --ck-color-base-foreground: var(--foreground);
+  --ck-color-base-border: var(--border);
+  --ck-color-focus-border: var(--ring);
+  --ck-color-text: var(--foreground);
+
+  /* Toolbar colors */
+  --ck-color-toolbar-background: var(--background);
+  --ck-color-toolbar-border: var(--border);
+
+  /* Button colors */
+  --ck-color-button-default-background: transparent;
+  --ck-color-button-default-hover-background: var(--accent);
+  --ck-color-button-on-background: var(--primary);
+  --ck-color-button-on-hover-background: var(--primary);
+  --ck-color-button-on-color: var(--primary-foreground);
+
+  /* Input colors */
+  --ck-color-input-background: var(--background);
+  --ck-color-input-border: var(--border);
+  --ck-color-input-text: var(--foreground);
+
+  /* Dropdown colors */
+  --ck-color-dropdown-panel-background: var(--card);
+  --ck-color-dropdown-panel-border: var(--border);
+
+  /* List colors */
+  --ck-color-list-background: var(--card);
+  --ck-color-list-button-hover-background: var(--accent);
+  --ck-color-list-button-on-background: var(--primary);
+  --ck-color-list-button-on-text: var(--primary-foreground);
+
+  /* Panel colors */
+  --ck-color-panel-background: var(--card);
+  --ck-color-panel-border: var(--border);
+
+  /* Content font */
+  --ck-content-font-family: var(--font-sans);
+  --ck-content-font-size: 16px;
+  --ck-content-line-height: 1.6;
+}
+
+.dark {
+  --ck-color-base-background: var(--card);
+  --ck-color-toolbar-background: var(--background);
+}
+
+/* CKEditor editor area styling */
+.ck.ck-editor__main>.ck-editor__editable {
+  min-height: 400px;
+  background-color: var(--card);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+  border-color: var(--border);
+}
+
+.ck.ck-editor__main>.ck-editor__editable.ck-focused {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px rgba(var(--ring) / 0.1);
+}
+
+/* Fix heading styles in editor */
+.ck.ck-editor__editable h2,
+.ck.ck-content h2 {
+  font-family: var(--font-serif);
+  font-size: 1.875em;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.ck.ck-editor__editable h3,
+.ck.ck-content h3 {
+  font-family: var(--font-serif);
+  font-size: 1.5em;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 0.8em;
+  margin-bottom: 0.4em;
+}
+
+.ck.ck-editor__editable h4,
+.ck.ck-content h4 {
+  font-family: var(--font-serif);
+  font-size: 1.25em;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-top: 0.6em;
+  margin-bottom: 0.3em;
+}
+
+/* Fix list styles in editor */
+.ck.ck-editor__editable ul,
+.ck.ck-editor__editable ol,
+.ck.ck-content ul,
+.ck.ck-content ol {
+  list-style-type: inherit;
+  padding-left: 40px;
+  margin: 1em 0;
+}
+
+.ck.ck-editor__editable ul,
+.ck.ck-content ul {
+  list-style-type: disc;
+}
+
+.ck.ck-editor__editable ol,
+.ck.ck-content ol {
+  list-style-type: decimal;
+}
+
+.ck.ck-editor__editable ul li,
+.ck.ck-editor__editable ol li,
+.ck.ck-content ul li,
+.ck.ck-content ol li {
+  margin: 0.5em 0;
+}
+
+/* Paragraph spacing */
+.ck.ck-editor__editable p,
+.ck.ck-content p {
+  margin: 1em 0;
+}
+
+.ck-content .image-style-align-left {
+  float: left;
+  margin: 0 15px 15px 0;
+}
+
+.ck-content .image-style-align-right {
+  float: right;
+  margin: 0 0 15px 15px;
+}
+
+.ck-content .image-style-align-center {
+  display: block;
+  margin: 20px auto;
+}
+
+.ck-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.ck-content figure.image {
+  max-width: min(100%, 640px);
+  margin-inline: auto;
+}
+
+.ck-content figure.image.image-style-align-left,
+.ck-content figure.image.image-style-align-right {
+  max-width: min(50%, 360px);
+}
+
+.ck-content figure.image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ck-content .clear {
+  clear: both;
+}
+
+/* Prose typography styles for rich-text content */
+.prose {
+  color: var(--foreground);
+  line-height: 1.75;
+}
+
+.prose p {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
+.prose h2 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.875em;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  line-height: 1.3;
+  color: var(--foreground);
+}
+
+.prose h3 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.5em;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+  line-height: 1.4;
+  color: var(--foreground);
+}
+
+.prose h4 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.25em;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.5;
+  color: var(--foreground);
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.prose a:hover {
+  color: var(--accent);
+}
+
+.prose ul,
+.prose ol {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+  padding-left: 1.625em;
+}
+
+.prose li {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose blockquote {
+  font-style: italic;
+  border-left: 4px solid var(--border);
+  padding-left: 1em;
+  margin: 1.6em 0;
+  color: var(--muted-foreground);
+}
+
+.prose code {
+  background-color: var(--muted);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: var(--font-mono);
+}
+
+.prose pre {
+  background-color: var(--muted);
+  padding: 1em;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.prose figure {
+  margin: 2em 0;
+}
+
+.prose figcaption {
+  text-align: center;
+  font-size: 0.875em;
+  color: var(--muted-foreground);
+  margin-top: 0.75em;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2em 0;
+}
+
+.prose th,
+.prose td {
+  border: 1px solid var(--border);
+  padding: 0.75em;
+  text-align: left;
+}
+
+.prose th {
+  background-color: var(--muted);
+  font-weight: 600;
+}
+
+/* Ensure images in prose don't break layout */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.prose figure.image {
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+/* Override for aligned images in prose */
+.prose figure.image.image-style-align-left,
+.prose figure.image.image-style-align-right {
+  max-width: min(50%, 400px);
+}
+
+/* Word break for long strings */
+.prose {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }

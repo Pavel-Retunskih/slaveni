@@ -12,6 +12,7 @@ export default async function NewsIdEditPage({ params }: { params: Promise<{ id:
         category: news.category ?? "",
         featured: Boolean(news.featured),
         content: news.content ?? "",
+        images: news.images ?? [],
     }
 
     return <NewsEditPageClient news={newsData} />

@@ -41,7 +41,7 @@ export default async function NewsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {featuredNews.map((item) => {
             return <FadeIn delay={0.2} key={item.id}>
-              <Link href={`/news/${item.id}`}>
+              <Link href={`/news/${item.id}`} scroll>
                 <Card className="mb-12 overflow-hidden border-primary/20 bg-primary/5">
                   <CardContent className="p-8 md:p-12">
                     <Badge className="mb-4 bg-primary text-primary-foreground">{item.category}</Badge>

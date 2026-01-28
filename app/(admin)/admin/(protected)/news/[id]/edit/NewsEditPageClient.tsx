@@ -1,58 +1,34 @@
 "use client"
-
-import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { NewsForm } from "@/features/news/NewsForm"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import { resolveApiResponse } from "@/shared/helpers/apiResponse"
+import { NewsDocument, NewsJSON } from "@/shared/api/db/models/News"
+import { NewsFormPayload } from "@/shared/types/news"
 
-interface NewsData {
-    id: string
-    title: string
-    excerpt: string
-    category: string
-    featured: boolean
-    content: string
-}
+
 
 interface NewsEditPageClientProps {
-    news: NewsData
+    news: NewsJSON
 }
 
 export function NewsEditPageClient({ news }: NewsEditPageClientProps) {
     const router = useRouter()
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const handleSubmit = async (data: {
-        title: string
-        excerpt: string
-        content: string
-        images: string[]
-        category: string
-        featured: boolean
-    }) => {
-        setIsSubmitting(true)
-        console.log(data)
-        try {
-            const response = await fetch(`/api/news/${news.id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            })
+    const onSubmit = async (data: NewsFormPayload) => {
+        const response = await fetch(`/api/news/${news.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
 
-            if (!response.ok) {
-                throw new Error("Failed to update news")
-            }
+        await resolveApiResponse<{ news: unknown }>(response)
 
-            router.push("/admin/news")
-            router.refresh()
-        } catch (error) {
-            console.error("Error updating news:", error)
-        } finally {
-            setIsSubmitting(false)
-        }
+        router.push("/admin/news")
+        router.refresh()
     }
 
     return (
@@ -75,9 +51,9 @@ export function NewsEditPageClient({ news }: NewsEditPageClientProps) {
                         content: news.content,
                         category: news.category,
                         featured: news.featured,
-                        images: [],
+                        images: news.images,
                     }}
-                    onSubmitAction={handleSubmit}
+                    onSubmitAction={onSubmit}
                 />
             </div>
         </div>
