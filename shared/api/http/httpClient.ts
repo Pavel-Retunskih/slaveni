@@ -1,4 +1,3 @@
-import "server-only"
 
 export class HttpError extends Error {
     status: number

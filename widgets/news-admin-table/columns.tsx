@@ -6,17 +6,23 @@ export type NewsArticle = {
     title: string,
     category: string,
     excerpt: string,
-    featured: boolean,
+    featured: string,
     id: string,
     createdAt: string,
-    updatedAt: string
+    updatedAt: string,
+    isPublished: { title: string, value: boolean }
 }
 
 export const newsColumns: ColumnDef<NewsArticle>[] = [
+
     {
         accessorKey: "title",
         header: "Заголовок",
     }, {
+        accessorFn: (row) => row.isPublished.title,
+        header: "Опубликовано",
+    },
+    {
         accessorKey: "category",
         header: "Категория",
     }, {
@@ -31,5 +37,6 @@ export const newsColumns: ColumnDef<NewsArticle>[] = [
     {
         accessorKey: "updatedAt",
         header: "Дата обновления",
-    }
+    },
+
 ]
