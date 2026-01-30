@@ -12,12 +12,6 @@ export async function uploadFile(file: File): Promise<UploadResult> {
         handleUploadUrl: "/api/upload",
     })
 
-    await fetch("/api/upload/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pathname: blob.pathname }),
-    })
-
     return {
         url: blob.url,
         downloadUrl: blob.downloadUrl,

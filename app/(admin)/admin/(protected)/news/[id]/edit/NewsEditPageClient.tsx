@@ -6,6 +6,7 @@ import Link from "next/link"
 import { resolveApiResponse } from "@/shared/helpers/apiResponse"
 import { NewsJSON } from "@/shared/api/db/models/News"
 import { NewsFormPayload } from "@/shared/types/news"
+import { NewsFormShell } from "@/widgets/news-form-shell/NewsFormShell"
 
 interface NewsEditPageClientProps {
     news: NewsJSON
@@ -31,27 +32,10 @@ export function NewsEditPageClient({ news }: NewsEditPageClientProps) {
 
     return (
         <div className="w-full flex flex-col">
-            <div className="flex items-center gap-4 mb-6">
-                <Link
-                    href="/admin/news"
-                    className="p-2 hover:bg-accent rounded-md transition-colors"
-                >
-                    <ArrowLeft className="w-5 h-5" />
-                </Link>
-                <h1 className="text-2xl font-semibold">Редактирование новости</h1>
-            </div>
-
             <div className="flex-1 overflow-auto">
-                <NewsForm
-                    initialData={{
-                        title: news.title,
-                        excerpt: news.excerpt,
-                        content: news.content,
-                        category: news.category,
-                        featured: news.featured,
-                        images: news.images,
-                        isPublished: news.isPublished,
-                    }}
+                <NewsFormShell
+                    title="Редактирование новости"
+                    initialData={news}
                     onSubmitAction={onSubmit}
                 />
             </div>

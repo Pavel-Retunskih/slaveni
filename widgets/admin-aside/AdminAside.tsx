@@ -17,7 +17,7 @@ export const AdminAside = () => {
     const pathname = usePathname()
 
     return (
-        <aside className="rounded-2xl border max-w-xs border-border bg-card dark:bg-white/10 p-6 backdrop-blur h-full flex flex-col shadow-sm">
+        <aside className="rounded-2xl border w-2xs border-border bg-card dark:bg-white/10 p-6 backdrop-blur h-full flex flex-col shadow-sm">
             <div className="mb-8 space-y-1">
                 <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Admin</p>
                 <h1 className="text-2xl font-semibold text-foreground">Большие Славени</h1>

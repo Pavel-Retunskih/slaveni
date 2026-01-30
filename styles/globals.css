@@ -446,9 +446,20 @@
   border-radius: 0.5rem;
 }
 
+.prose figcaption {
+  margin-top: 0;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
 .prose figure.image {
   max-width: 100%;
   margin-inline: auto;
+}
+
+.prose figure:has(figcaption) img {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 /* Override for aligned images in prose */
@@ -461,4 +472,42 @@
 .prose {
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+.ck-content .image.ck-widget_upload-placeholder,
+.ck-editor__editable .image.ck-widget_upload-placeholder {
+  position: relative;
+  min-height: 160px;
+  background: hsl(var(--muted) / 0.3);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.dark .ck-editor__editable .image.ck-widget_upload-placeholder {
+  background: hsl(var(--muted) / 0.2);
+}
+
+.ck-content .image.ck-widget_upload-placeholder::after,
+.ck-editor__editable .image.ck-widget_upload-placeholder::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 4px solid hsl(var(--muted-foreground) / 0.2);
+  border-top-color: hsl(var(--primary));
+  animation: ck-image-spin 0.8s linear infinite;
+}
+
+.dark .ck-editor__editable .image.ck-widget_upload-placeholder::after {
+  border-color: hsl(var(--muted-foreground) / 0.3);
+  border-top-color: hsl(var(--primary));
+}
+
+@keyframes ck-image-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

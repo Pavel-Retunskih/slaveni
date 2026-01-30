@@ -1,41 +1,36 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { NewsForm } from "@/features/news/NewsForm"
-import { resolveApiResponse } from "@/shared/helpers/apiResponse"
 import type { NewsFormPayload } from "@/shared/types/news"
+import { NewsFormShell } from "@/widgets/news-form-shell/NewsFormShell"
 
 export const NewsCreatePageClient = () => {
     const router = useRouter()
 
     const onSubmit = async (data: NewsFormPayload) => {
-        const response = await fetch("/api/news/create", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
+        try {
+            const response = await fetch("/api/news/create", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            })
 
-        await resolveApiResponse<{ news: unknown }>(response)
+            if (!response.ok) {
+                const errorData = await response.json()
+                throw new Error(errorData.error)
+            }
 
-        router.push("/admin/news")
-        router.refresh()
+            router.push("/admin/news")
+            router.refresh()
+        } catch (error) {
+            throw error
+        }
     }
-    return <div className="h-full flex flex-col">
-        <div className="flex items-center gap-4 mb-6">
-            <Link
-                href="/admin/news"
-                className="p-2 hover:bg-accent rounded-md transition-colors"
-            >
-                <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <h1 className="text-2xl font-semibold">Создание новости</h1>
-        </div>
-
+    return <div className="w-full flex flex-col">
         <div className="flex-1 overflow-auto">
-            <NewsForm
+            <NewsFormShell
+                title="Создание новости"
                 onSubmitAction={onSubmit}
             />
         </div>

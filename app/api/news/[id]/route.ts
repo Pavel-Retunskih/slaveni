@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/shared/auth/options"
 import { NextRequest } from "next/server"
 import { checkAuth } from "@/shared/helpers/checkAuth"
+import { extractImageUrls, isBlobUrl } from "@/shared/helpers/extractImagesFromHtml"
+import { del } from "@vercel/blob"
 
 export async function PUT(
     request: NextRequest,
@@ -18,6 +20,24 @@ export async function PUT(
 
         const body = await request.json()
         const { title, excerpt, content, category, featured, images } = body
+
+        const existingNews = await News.findById(id)
+        if (!existingNews) {
+            return Response.json(
+                { error: "News not found" },
+                { status: 404 }
+            )
+        }
+
+        const oldContentImages = extractImageUrls(existingNews.content).filter(isBlobUrl)
+        const oldGalleryImages = (existingNews.images || []).filter(isBlobUrl)
+        const oldImages = [...new Set([...oldContentImages, ...oldGalleryImages])]
+
+        const newContentImages = extractImageUrls(content).filter(isBlobUrl)
+        const newGalleryImages = (images || []).filter(isBlobUrl)
+        const newImages = [...new Set([...newContentImages, ...newGalleryImages])]
+
+        const imagesToDelete = oldImages.filter(url => !newImages.includes(url))
 
         const updatedNews = await News.findByIdAndUpdate(
             id,
@@ -35,9 +55,19 @@ export async function PUT(
 
         if (!updatedNews) {
             return Response.json(
-                { error: "News not found" },
-                { status: 404 }
+                { error: "Failed to update news" },
+                { status: 500 }
             )
+        }
+
+        if (imagesToDelete.length > 0) {
+            try {
+                await del(imagesToDelete, {
+                    token: process.env.BLOB_READ_WRITE_TOKEN,
+                })
+            } catch (deleteError) {
+                console.error("Failed to delete unused images:", deleteError)
+            }
         }
 
         return Response.json({

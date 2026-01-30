@@ -43,11 +43,14 @@ import {
 } from "ckeditor5"
 
 import { uploadFile } from "@/shared/helpers/uploadFile"
+import { findRemovedImages } from "@/shared/helpers/extractImagesFromHtml"
+import { deleteFile } from "@/shared/helpers/deleteFile"
 
 interface RichTextEditorProps {
   value: string
   onChange: (value: string) => void
   placeholder?: string
+  onImagesRemoved?: (urls: string[]) => void
 }
 
 const headingOptions: HeadingOption[] = [
@@ -61,9 +64,10 @@ const alignmentConfig: AlignmentConfig = {
   options: ["left", "center", "right", "justify"],
 }
 
-export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, placeholder, onImagesRemoved }: RichTextEditorProps) {
   const editorRef = useRef<Editor | null>(null)
   const lastSyncedValueRef = useRef(value)
+  const previousContentRef = useRef(value)
 
   const editorConfig = useMemo(() => ({
     plugins: [
@@ -166,14 +170,26 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
   }), [placeholder])
 
   const createUploadAdapter = useCallback((loader: unknown) => {
+    const typedLoader = loader as {
+      file?: Promise<File | null>
+      uploadTotal?: number | null
+      uploaded?: number
+    }
+
     return {
       upload: async () => {
-        const file = await (loader as { file?: Promise<File | null> }).file
+        const file = await typedLoader.file
         if (!file) {
           return { default: "" }
         }
 
+        typedLoader.uploadTotal = file.size
+        typedLoader.uploaded = 0
+
         const { url } = await uploadFile(file)
+
+        typedLoader.uploaded = file.size
+
         return { default: url }
       },
       abort: () => undefined,
@@ -204,9 +220,21 @@ export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorP
             fileRepository.createUploadAdapter = (loader: unknown) => createUploadAdapter(loader)
           }
         }}
-        onChange={(_, editor) => {
+        onChange={async (_, editor) => {
           const data = editor.getData()
           lastSyncedValueRef.current = data
+
+          const removedImages = findRemovedImages(previousContentRef.current, data)
+          if (removedImages.length > 0) {
+            try {
+              await deleteFile(removedImages)
+              onImagesRemoved?.(removedImages)
+            } catch (error) {
+              console.error("Failed to delete removed images:", error)
+            }
+          }
+
+          previousContentRef.current = data
           onChange(data)
         }}
       />
