@@ -134,15 +134,17 @@
   --ck-font-size-base: 14px;
 
   /* Editor colors */
-  --ck-color-base-background: var(--card);
+  --ck-color-base-background: var(--background);
   --ck-color-base-foreground: var(--foreground);
   --ck-color-base-border: var(--border);
   --ck-color-focus-border: var(--ring);
   --ck-color-text: var(--foreground);
+  --ck-color-tooltip-text: var(--ck-color-text);
 
   /* Toolbar colors */
   --ck-color-toolbar-background: var(--background);
   --ck-color-toolbar-border: var(--border);
+  --ck-color-tooltip-background: var(--background);
 
   /* Button colors */
   --ck-color-button-default-background: transparent;
@@ -177,8 +179,10 @@
 }
 
 .dark {
-  --ck-color-base-background: var(--card);
-  --ck-color-toolbar-background: var(--background);
+  --ck-color-base-background: hsl(240, 4%, 16%);
+  --ck-color-toolbar-background: hsl(240, 4%, 12%);
+  --ck-color-toolbar-border: hsl(240, 4%, 20%);
+  --ck-color-base-border: hsl(240, 4%, 20%);
 }
 
 /* CKEditor editor area styling */
@@ -187,6 +191,13 @@
   background-color: var(--card);
   border-color: var(--border);
   color: var(--foreground);
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.dark .ck.ck-editor__main>.ck-editor__editable {
+  background-color: hsl(240, 4%, 16%);
+  border-color: hsl(240, 4%, 20%);
+  color: hsl(0, 0%, 98%);
 }
 
 .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {

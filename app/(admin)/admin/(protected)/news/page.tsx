@@ -5,19 +5,23 @@ import { Button } from "@/shared/components/ui/button"
 import Link from "next/link"
 import { checkAuth } from "@/shared/helpers/checkAuth"
 
+export type NormalizedNewsArticle = Omit<NewsArticle, 'featured' | 'isPublished'> & { featured: string, isPublished: { title: string, value: boolean } }
+
 export default async function NewsPage() {
     await checkAuth()
 
     const { featuredNews, regularNews } = await loadNews()
     const rawNews = [...featuredNews, ...regularNews]
-    const news: NewsArticle[] = rawNews.map((item) => ({
+    console.log("rawNews", rawNews)
+    const news: NormalizedNewsArticle[] = rawNews.map((item) => ({
         id: item.id,
         title: item.title,
         category: item.category,
         excerpt: item.excerpt,
-        featured: item.featured,
-        createdAt: item.createdAt.toString(),
-        updatedAt: item.updatedAt.toString(),
+        featured: item.featured ? "Да" : "Нет",
+        createdAt: item.createdAt.toLocaleDateString('ru-RU'),
+        updatedAt: item.updatedAt.toLocaleDateString('ru-RU'),
+        isPublished: item.isPublished ? { title: "Да", value: true } : { title: "Нет", value: false },
     }))
     return <div>
         <div className="flex justify-between items-center mb-8">

@@ -6,6 +6,7 @@ import Link from "next/link"
 import { resolveApiResponse } from "@/shared/helpers/apiResponse"
 import { NewsDocument, NewsJSON } from "@/shared/api/db/models/News"
 import { NewsFormPayload } from "@/shared/types/news"
+import { Badge } from "@/shared/components/ui/badge"
 
 
 
@@ -30,7 +31,7 @@ export function NewsEditPageClient({ news }: NewsEditPageClientProps) {
         router.push("/admin/news")
         router.refresh()
     }
-
+    console.log(news)
     return (
         <div className="h-full flex flex-col">
             <div className="flex items-center gap-4 mb-6">
@@ -52,6 +53,7 @@ export function NewsEditPageClient({ news }: NewsEditPageClientProps) {
                         category: news.category,
                         featured: news.featured,
                         images: news.images,
+                        isPublished: news.isPublished,
                     }}
                     onSubmitAction={onSubmit}
                 />

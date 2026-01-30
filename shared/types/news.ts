@@ -5,6 +5,7 @@ export interface NewsFormValues {
   featured: boolean
   content: string
   images: string[]
+  isPublished: boolean
 }
 
 export interface NewsFormPayload extends NewsFormValues {

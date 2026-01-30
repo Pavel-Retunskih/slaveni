@@ -17,11 +17,11 @@ export const AdminAside = () => {
     const pathname = usePathname()
 
     return (
-        <aside className="rounded-2xl border border-white/10 bg-white/5 dark:bg-white/10 p-6 backdrop-blur h-full flex flex-col">
+        <aside className="rounded-2xl border max-w-xs border-border bg-card dark:bg-white/10 p-6 backdrop-blur h-full flex flex-col shadow-sm">
             <div className="mb-8 space-y-1">
-                <p className="text-sm uppercase tracking-[0.3em] text-white/60 dark:text-white/70">Admin</p>
-                <h1 className="text-2xl font-semibold text-white dark:text-white">Большие Славени</h1>
-                <p className="text-sm text-white/70 dark:text-white/80">Управление новостями и вакансиями предприятия</p>
+                <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Admin</p>
+                <h1 className="text-2xl font-semibold text-foreground">Большие Славени</h1>
+                <p className="text-sm text-muted-foreground">Управление новостями и вакансиями предприятия</p>
             </div>
 
             <NavigationMenu orientation="vertical" className="flex-1">
@@ -35,8 +35,8 @@ export const AdminAside = () => {
                                     <Link
                                         href={item.href}
                                         className={`block rounded-xl px-4 py-2 text-sm font-medium transition ${isActive
-                                            ? "bg-white/15 text-white dark:bg-white/20"
-                                            : "text-white/80 hover:bg-white/10 hover:text-white dark:text-white/90 dark:hover:bg-white/15"
+                                            ? "bg-primary text-primary-foreground"
+                                            : "text-foreground hover:bg-accent hover:text-accent-foreground"
                                             }`}
                                     >
                                         {item.label}
@@ -48,13 +48,13 @@ export const AdminAside = () => {
                 </NavigationMenuList>
             </NavigationMenu>
 
-            <div className="mt-auto pt-6 border-t border-white/10 dark:border-white/20 flex items-center justify-between gap-2">
+            <div className="mt-auto pt-6 border-t border-border flex items-center justify-between gap-2">
                 <ThemeToggle />
                 <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => signOut({ callbackUrl: "/admin/login" })}
-                    className="text-white/80 hover:text-white hover:bg-white/10 dark:hover:bg-white/15 flex items-center gap-2"
+                    className="flex items-center gap-2"
                 >
                     <LogOut className="h-4 w-4" />
                     <span>Выход</span>

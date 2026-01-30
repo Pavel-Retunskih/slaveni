@@ -17,6 +17,7 @@ import { Separator } from "@/shared/components/ui/separator"
 import { Switch } from "@/shared/components/ui/switch"
 import { NewsImagesField } from "./NewsImageField"
 import { RichTextEditor } from "@/shared/components/ui/rich-text-editor"
+import { Badge } from "@/shared/components/ui/badge"
 
 export type NewsCreateData = NewsFormValues
 
@@ -31,6 +32,7 @@ const newsSchema = z.object({
   category: z.string().min(3, "Категория должна содержать не менее 3 символов"),
   featured: z.boolean(),
   content: z.string().min(10, "Содержимое должно содержать не менее 100 символов"),
+  isPublished: z.boolean(),
 })
 
 interface NewsFormProps {
@@ -46,9 +48,10 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
     featured: false,
     content: "",
     images: [],
+    isPublished: false,
   }
 
-  const { control, register, handleSubmit, watch, formState: { isSubmitting, errors }, setValue, getValues, setError, clearErrors } = useForm<NewsCreateData>({
+  const { control, handleSubmit, watch, formState: { isSubmitting, errors }, setValue, getValues, setError, clearErrors } = useForm<NewsCreateData>({
     defaultValues: { ...defaultValues, ...initialData },
     resolver: zodResolver(newsSchema),
     mode: "onSubmit",
@@ -57,6 +60,23 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [tempImages, setTempImages] = useState<TempImage[]>([])
   const watchedImages = watch("images") ?? []
+
+  const initialIsPublished = initialData?.isPublished ?? defaultValues.isPublished
+  const watchedIsPublished = watch("isPublished")
+  const publicationHint = watchedIsPublished === initialIsPublished
+    ? null
+    : watchedIsPublished
+      ? { title: "Новость будет опубликована после сохранения", action: "save" }
+      : { title: "Новость будет снята с публикации после сохранения", action: "delete" }
+
+  const initialFeatured = initialData?.featured ?? defaultValues.featured
+  const watchedFeatured = watch("featured")
+  const featuredHint = watchedFeatured === initialFeatured
+    ? null
+    : watchedFeatured
+      ? { title: "Новость отобразится как главная после сохранения", action: "save" }
+      : { title: "Новость не будет отображаться как главная после сохранения", action: "delete" }
+
 
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files ?? [])
@@ -114,7 +134,6 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
   console.log(errors)
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
       <FieldGroup>
         {/* Title */}
         <Controller
@@ -184,21 +203,62 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
           </Field>
         )} />
         <Separator />
-        {/* Featured toggle */}
-        <Controller name="featured" control={control} render={({ field, fieldState }) => (
-          <Field>
-            <FieldDescription>Отображает новость как главную на странице</FieldDescription>
-            <div className="flex items-center gap-2">
-              <Switch onCheckedChange={(checked) => {
-                field.onChange(checked)
-              }} />
-              <FieldLabel htmlFor="featured">
-                Отображать как главную новость
-              </FieldLabel>
-            </div>
+        <div className="flex items-start justify-between">
+          {/* Featured toggle */}
+          <Controller name="featured" control={control} render={({ field }) => (
+            <Field>
+              <FieldDescription>
+                <span>Отображает новость как главную на странице</span>
+                {initialFeatured && (
+                  <Badge className="ml-2">
+                    Отображается
+                  </Badge>
+                )}
+              </FieldDescription>
+              <div className="flex items-center gap-2 relative">
+                <Switch onCheckedChange={field.onChange} checked={field.value} />
+                <FieldLabel htmlFor="featured">
+                  Отображать как главную новость
+                </FieldLabel>
+                {featuredHint && (
+                  <FieldDescription className={(featuredHint.action === 'save' ? 'text-green-500' : 'text-red-500') + ' absolute top-5 left-0'}>
+                    {featuredHint.title}
+                  </FieldDescription>
+                )}
+              </div>
 
-          </Field>
-        )} />
+            </Field>
+          )} />
+
+          {/* Published toggle */}
+          <Controller
+            name="isPublished"
+            control={control}
+            render={({ field }) => (
+              <Field>
+                <FieldDescription className="flex items-center gap-2">
+                  <span>Публикация новости на сайте</span>
+                  {initialIsPublished && <Badge className="ml-2">
+                    {"Опубликовано"}
+                  </Badge>}
+                </FieldDescription>
+
+                <div className="flex items-center gap-2 relative">
+                  <Switch onCheckedChange={field.onChange} checked={field.value} />
+                  <FieldLabel htmlFor="isPublished">
+                    Опубликовать новость
+                  </FieldLabel>
+                  {publicationHint && (
+                    <FieldDescription className={(publicationHint.action === 'save' ? 'text-green-500' : 'text-red-500') + ' absolute top-5 left-0'}>
+                      {publicationHint.title}
+                    </FieldDescription>
+                  )}
+                </div>
+              </Field>
+            )}
+          />
+        </div>
+
         <Separator />
         {/* Image upload */}
         <Controller
@@ -256,7 +316,7 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
           )}
         </Button>
       </div>
-    </form>
+    </form >
   )
 }
 

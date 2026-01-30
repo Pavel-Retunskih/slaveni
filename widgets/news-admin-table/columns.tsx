@@ -6,7 +6,7 @@ export type NewsArticle = {
     title: string,
     category: string,
     excerpt: string,
-    featured: boolean,
+    featured: string,
     id: string,
     createdAt: string,
     updatedAt: string

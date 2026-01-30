@@ -4,16 +4,7 @@ import { NewsEditPageClient } from "./NewsEditPageClient"
 export default async function NewsIdEditPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const news = await loadNewsById(id)
+    const newsJSON = news.toJSON()
 
-    const newsData = {
-        id: news.id ?? news._id?.toString() ?? "",
-        title: news.title ?? "",
-        excerpt: news.excerpt ?? "",
-        category: news.category ?? "",
-        featured: Boolean(news.featured),
-        content: news.content ?? "",
-        images: news.images ?? [],
-    }
-
-    return <NewsEditPageClient news={newsData} />
+    return <NewsEditPageClient news={newsJSON} />
 }

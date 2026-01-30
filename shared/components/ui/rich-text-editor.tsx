@@ -42,7 +42,6 @@ import {
   type HeadingOption,
 } from "ckeditor5"
 
-import "ckeditor5/ckeditor5.css"
 import { uploadFile } from "@/shared/helpers/uploadFile"
 
 interface RichTextEditorProps {

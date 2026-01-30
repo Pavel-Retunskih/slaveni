@@ -13,7 +13,7 @@ export function ThemeToggle() {
     const savedTheme = localStorage.getItem("admin-theme") as "light" | "dark" | null
     const initialTheme = savedTheme || "light"
     setTheme(initialTheme)
-    
+
     if (initialTheme === "dark") {
       document.documentElement.classList.add("dark")
     }
@@ -23,7 +23,7 @@ export function ThemeToggle() {
     const newTheme = theme === "light" ? "dark" : "light"
     setTheme(newTheme)
     localStorage.setItem("admin-theme", newTheme)
-    
+
     if (newTheme === "dark") {
       document.documentElement.classList.add("dark")
     } else {
@@ -40,7 +40,6 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon-sm"
       onClick={toggleTheme}
-      className="text-white/80 hover:text-white hover:bg-white/10"
       aria-label="Toggle theme"
     >
       {theme === "light" ? (
