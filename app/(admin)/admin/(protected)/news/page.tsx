@@ -23,7 +23,7 @@ export default async function NewsPage() {
         updatedAt: item.updatedAt.toLocaleDateString('ru-RU'),
         isPublished: item.isPublished ? { title: "Да", value: true } : { title: "Нет", value: false },
     }))
-    return <div>
+    return <>
         <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold">Cтраница создания и редактирования новостей</h2>
             <Button asChild >
@@ -32,5 +32,5 @@ export default async function NewsPage() {
         </div>
 
         <NewsAdminTable data={news} />
-    </div>
+    </>
 }

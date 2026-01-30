@@ -4,11 +4,8 @@ import { NewsForm } from "@/features/news/NewsForm"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { resolveApiResponse } from "@/shared/helpers/apiResponse"
-import { NewsDocument, NewsJSON } from "@/shared/api/db/models/News"
+import { NewsJSON } from "@/shared/api/db/models/News"
 import { NewsFormPayload } from "@/shared/types/news"
-import { Badge } from "@/shared/components/ui/badge"
-
-
 
 interface NewsEditPageClientProps {
     news: NewsJSON
@@ -31,9 +28,9 @@ export function NewsEditPageClient({ news }: NewsEditPageClientProps) {
         router.push("/admin/news")
         router.refresh()
     }
-    console.log(news)
+
     return (
-        <div className="h-full flex flex-col">
+        <div className="w-full flex flex-col">
             <div className="flex items-center gap-4 mb-6">
                 <Link
                     href="/admin/news"
