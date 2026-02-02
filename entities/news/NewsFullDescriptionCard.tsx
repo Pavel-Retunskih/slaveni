@@ -2,9 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { Separator } from "@/shared/components/ui/separator"
 import { NewsJSON } from "@/shared/api/db/models/News"
 import { Badge } from "@/shared/components/ui/badge"
-import Image from "next/image"
+import { ImageCarousel } from "@/shared/components/ui/image-carousel"
+import { ImageCarouselPreview } from "@/shared/components/ui/image-carousel-preview"
 
-export const NewsFullDescriptionCard = ({ news }: { news: NewsJSON }) => {
+export const NewsFullDescriptionCard = ({ news, newsId, safeContent, isPreview = false }: { news: NewsJSON; newsId: string; safeContent: string; isPreview?: boolean }) => {
     return (
         <Card className="overflow-hidden">
             <CardHeader className="border-b">
@@ -37,23 +38,18 @@ export const NewsFullDescriptionCard = ({ news }: { news: NewsJSON }) => {
             {news.images && news.images.length > 0 && (
                 <>
                     <CardContent>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {news.images.slice(0, 4).map((image, index) => (
-                                <div
-                                    key={image}
-                                    className={`relative aspect-video rounded-lg overflow-hidden bg-muted ${index === 0 && news.images.length > 1 ? "sm:col-span-2" : ""
-                                        }`}
-                                >
-                                    <Image
-                                        src={image}
-                                        alt={`${news.title} - изображение ${index + 1}`}
-                                        fill
-                                        className="object-cover"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                        {isPreview ? (
+                            <ImageCarouselPreview
+                                images={news.images}
+                                newsTitle={news.title}
+                            />
+                        ) : (
+                            <ImageCarousel
+                                images={news.images}
+                                newsId={newsId}
+                                newsTitle={news.title}
+                            />
+                        )}
                     </CardContent>
                     <Separator />
                 </>
@@ -62,7 +58,7 @@ export const NewsFullDescriptionCard = ({ news }: { news: NewsJSON }) => {
             <CardContent>
                 <div
                     className="ck-content prose prose-lg max-w-none"
-                    dangerouslySetInnerHTML={{ __html: news.content }}
+                    dangerouslySetInnerHTML={{ __html: safeContent }}
                 />
             </CardContent>
         </Card>

@@ -90,7 +90,12 @@ export function NewsFormShell({ title, initialData, onSubmitAction, onDeleteActi
                             <TabsTrigger value="form">Форма</TabsTrigger>
                         </TabsList>
                         <TabsContent value="preview" className="max-w-4xl w-full mx-auto">
-                            <NewsFullDescriptionCard news={newsPreview} />
+                            <NewsFullDescriptionCard
+                                news={newsPreview}
+                                newsId="preview"
+                                safeContent={newsPreview.content}
+                                isPreview={true}
+                            />
                         </TabsContent>
                         <TabsContent value="form">
                             <NewsForm
