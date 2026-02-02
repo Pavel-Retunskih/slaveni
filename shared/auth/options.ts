@@ -33,7 +33,8 @@ export const authOptions: NextAuthOptions = {
                     return null
                 }
 
-                if (admin.password !== credentials.password) {
+                const isPasswordValid = await (admin as any).comparePassword(credentials.password)
+                if (!isPasswordValid) {
                     return null
                 }
 

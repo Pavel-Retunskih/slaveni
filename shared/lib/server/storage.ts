@@ -9,13 +9,6 @@ const AWS_S3_ENDPOINT = process.env.AWS_S3_ENDPOINT
 const AWS_S3_FORCE_PATH_STYLE = process.env.AWS_S3_FORCE_PATH_STYLE === "true"
 const AWS_S3_BUCKET_ENDPOINT = process.env.AWS_S3_BUCKET_ENDPOINT === "true"
 
-console.log("S3 Configuration:", {
-  bucket: S3_UPLOAD_BUCKET,
-  endpoint: AWS_S3_ENDPOINT,
-  region: AWS_REGION,
-  forcePathStyle: AWS_S3_FORCE_PATH_STYLE,
-})
-
 const s3Client = new S3Client({
   region: AWS_REGION,
   endpoint: AWS_S3_ENDPOINT,

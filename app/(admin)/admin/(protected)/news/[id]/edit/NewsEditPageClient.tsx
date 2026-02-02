@@ -1,6 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { NewsForm } from "@/features/news/NewsForm"
+import { NewsForm } from "@/features/news/ui/NewsForm"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { resolveApiResponse } from "@/shared/helpers/apiResponse"

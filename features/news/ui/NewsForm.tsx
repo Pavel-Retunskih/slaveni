@@ -17,13 +17,10 @@ import { NewsImagesField } from "./NewsImageField"
 import { RichTextEditor } from "@/shared/components/ui/rich-text-editor"
 import { Badge } from "@/shared/components/ui/badge"
 
-
 type TempImage = {
   file: File
   url: string
 }
-
-
 
 interface NewsFormProps {
   initialData?: Partial<NewsFormValues>
@@ -123,13 +120,7 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
         images: [...persistedImages, ...galleryUploads.map(({ url }) => url)],
         uploadKeys: [...galleryUploads.map(({ key }) => key), ...contentUploadKeys],
       })
-
       tempImages.forEach(({ url }) => URL.revokeObjectURL(url))
-      setTempImages([])
-      setValue("images", [...persistedImages, ...galleryUploads.map(({ url }) => url)])
-      setValue("content", processedContent)
-      if (fileInputRef.current) fileInputRef.current.value = ""
-      clearErrors("images")
     } catch (error) {
       if (error instanceof Error) {
         setError("images", {
@@ -287,6 +278,7 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
                 fileInputRef={fileInputRef}
                 isLocalImage={isLocalImage}
               />
+              {fieldState.isDirty && <FieldDescription className="text-green-500"> Изображения будут изменены после сохранения новости</FieldDescription>}
               <FieldError errors={[fieldState.error]} />
             </Field>
 
