@@ -1,9 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { CKEditor } from "@ckeditor/ckeditor5-react"
 import {
   ClassicEditor,
+  Base64UploadAdapter,
   Essentials,
   Paragraph,
   Bold,
@@ -37,20 +38,14 @@ import {
   Mention,
   ImageStyleConfig,
   type Editor,
-  type FileRepository,
   type AlignmentConfig,
   type HeadingOption,
 } from "ckeditor5"
-
-import { uploadFile } from "@/shared/helpers/uploadFile"
-import { findRemovedImages } from "@/shared/helpers/extractImagesFromHtml"
-import { deleteFile } from "@/shared/helpers/deleteFile"
 
 interface RichTextEditorProps {
   value: string
   onChange: (value: string) => void
   placeholder?: string
-  onImagesRemoved?: (urls: string[]) => void
 }
 
 const headingOptions: HeadingOption[] = [
@@ -64,10 +59,9 @@ const alignmentConfig: AlignmentConfig = {
   options: ["left", "center", "right", "justify"],
 }
 
-export function RichTextEditor({ value, onChange, placeholder, onImagesRemoved }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
   const editorRef = useRef<Editor | null>(null)
   const lastSyncedValueRef = useRef(value)
-  const previousContentRef = useRef(value)
 
   const editorConfig = useMemo(() => ({
     plugins: [
@@ -88,6 +82,7 @@ export function RichTextEditor({ value, onChange, placeholder, onImagesRemoved }
       ImageStyle,
       ImageToolbar,
       ImageUpload,
+      Base64UploadAdapter,
       ImageResizeEditing,
       ImageResizeHandles,
       ImageResizeButtons,
@@ -169,32 +164,6 @@ export function RichTextEditor({ value, onChange, placeholder, onImagesRemoved }
     licenseKey: "GPL",
   }), [placeholder])
 
-  const createUploadAdapter = useCallback((loader: unknown) => {
-    const typedLoader = loader as {
-      file?: Promise<File | null>
-      uploadTotal?: number | null
-      uploaded?: number
-    }
-
-    return {
-      upload: async () => {
-        const file = await typedLoader.file
-        if (!file) {
-          return { default: "" }
-        }
-
-        typedLoader.uploadTotal = file.size
-        typedLoader.uploaded = 0
-
-        const { url } = await uploadFile(file)
-
-        typedLoader.uploaded = file.size
-
-        return { default: url }
-      },
-      abort: () => undefined,
-    }
-  }, [])
 
   useEffect(() => {
     if (!editorRef.current) {
@@ -215,26 +184,10 @@ export function RichTextEditor({ value, onChange, placeholder, onImagesRemoved }
         config={editorConfig}
         onReady={(editor) => {
           editorRef.current = editor
-          const fileRepository = editor.plugins.get("FileRepository") as FileRepository | undefined
-          if (fileRepository) {
-            fileRepository.createUploadAdapter = (loader: unknown) => createUploadAdapter(loader)
-          }
         }}
-        onChange={async (_, editor) => {
+        onChange={(_, editor) => {
           const data = editor.getData()
           lastSyncedValueRef.current = data
-
-          const removedImages = findRemovedImages(previousContentRef.current, data)
-          if (removedImages.length > 0) {
-            try {
-              await deleteFile(removedImages)
-              onImagesRemoved?.(removedImages)
-            } catch (error) {
-              console.error("Failed to delete removed images:", error)
-            }
-          }
-
-          previousContentRef.current = data
           onChange(data)
         }}
       />

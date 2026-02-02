@@ -3,19 +3,19 @@ import { News } from "@/shared/api/db/models/News"
 import { checkAuth } from "@/shared/helpers/checkAuth"
 import { createErrorResponse, createSuccessResponse } from "@/shared/helpers/apiResponse"
 import type { NewsFormPayload } from "@/shared/types/news"
-import { del } from "@vercel/blob"
+import { deleteUploadsByKeys } from "@/shared/lib/server/storage"
 import mongoose from "mongoose"
 
 export async function POST(request: Request) {
     await checkAuth()
-    let tempUploadPathnames: string[] = []
+    let tempUploadKeys: string[] = []
 
     try {
         await dbConnect()
         const body: NewsFormPayload = await request.json()
 
-        const { title, excerpt, content, category, featured, images = [], uploadPathnames = [] } = body
-        tempUploadPathnames = uploadPathnames
+        const { title, excerpt, content, category, featured, images = [], uploadKeys = [] } = body
+        tempUploadKeys = uploadKeys
 
         const news = await News.create({
             title,
@@ -28,16 +28,7 @@ export async function POST(request: Request) {
 
         return Response.json(createSuccessResponse({ news: news.toJSON() }), { status: 201 })
     } catch (error) {
-        await Promise.all(
-            tempUploadPathnames.map(async (pathname) => {
-                try {
-                    await del(pathname)
-                } catch (cleanupError) {
-                    console.error("Failed to delete blob:", cleanupError)
-                }
-            }),
-
-        )
+        await deleteUploadsByKeys(tempUploadKeys)
 
         if (error instanceof mongoose.Error.ValidationError) {
             const fields = Object.entries(error.errors).reduce<Record<string, { message: string }>>(

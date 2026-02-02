@@ -1,11 +1,10 @@
 import { dbConnect } from "@/shared/api/db/client"
 import { News } from "@/shared/api/db/models/News"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/shared/auth/options"
 import { NextRequest } from "next/server"
 import { checkAuth } from "@/shared/helpers/checkAuth"
-import { extractImageUrls, isBlobUrl } from "@/shared/helpers/extractImagesFromHtml"
-import { del } from "@vercel/blob"
+import { extractImageUrls, isManagedUploadUrl } from "@/shared/helpers/extractImagesFromHtml"
+import { deleteUploadsByKeys } from "@/shared/lib/server/storage"
+import { extractLegacyBlobPath, extractUploadKeyFromUrl, isLegacyBlobUrl } from "@/shared/lib/uploads"
 
 export async function PUT(
     request: NextRequest,
@@ -29,12 +28,12 @@ export async function PUT(
             )
         }
 
-        const oldContentImages = extractImageUrls(existingNews.content).filter(isBlobUrl)
-        const oldGalleryImages = (existingNews.images || []).filter(isBlobUrl)
+        const oldContentImages = extractImageUrls(existingNews.content).filter(isManagedUploadUrl)
+        const oldGalleryImages = (existingNews.images || []).filter(isManagedUploadUrl)
         const oldImages = [...new Set([...oldContentImages, ...oldGalleryImages])]
 
-        const newContentImages = extractImageUrls(content).filter(isBlobUrl)
-        const newGalleryImages = (images || []).filter(isBlobUrl)
+        const newContentImages = extractImageUrls(content).filter(isManagedUploadUrl)
+        const newGalleryImages = (images || []).filter(isManagedUploadUrl)
         const newImages = [...new Set([...newContentImages, ...newGalleryImages])]
 
         const imagesToDelete = oldImages.filter(url => !newImages.includes(url))
@@ -61,12 +60,23 @@ export async function PUT(
         }
 
         if (imagesToDelete.length > 0) {
-            try {
-                await del(imagesToDelete, {
-                    token: process.env.BLOB_READ_WRITE_TOKEN,
-                })
-            } catch (deleteError) {
-                console.error("Failed to delete unused images:", deleteError)
+            const keys = imagesToDelete
+                .map((url) => extractUploadKeyFromUrl(url))
+                .filter((key): key is string => Boolean(key))
+
+            const legacyKeys = imagesToDelete
+                .filter(isLegacyBlobUrl)
+                .map((url) => extractLegacyBlobPath(url))
+                .filter((path): path is string => Boolean(path))
+
+            const allKeys = [...keys, ...legacyKeys]
+
+            if (allKeys.length > 0) {
+                try {
+                    await deleteUploadsByKeys(allKeys)
+                } catch (deleteError) {
+                    console.error("Failed to delete unused images:", deleteError)
+                }
             }
         }
 

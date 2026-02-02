@@ -8,8 +8,8 @@ import { Loader2 } from "lucide-react"
 import { Controller, useFormContext } from "react-hook-form"
 import { Validator } from "@/shared/helpers/Validator"
 import { uploadFile } from "@/shared/helpers/uploadFile"
+import { extractBase64Images, uploadBase64Images, replaceBase64WithUrls } from "@/shared/helpers/processBase64Images"
 import type { NewsFormValues, NewsFormPayload } from "@/shared/types/news"
-import { BlobAccessError } from "@vercel/blob"
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/shared/components/ui/field"
 import { Separator } from "@/shared/components/ui/separator"
 import { Switch } from "@/shared/components/ui/switch"
@@ -103,20 +103,35 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
   const onSubmit = async (data: NewsFormValues) => {
     const images = getCurrentImages()
     const persistedImages = images.filter((url) => !isLocalImage(url))
+
     try {
-      const uploads = await Promise.all(tempImages.map(({ file }) => uploadFile(file)))
+      const galleryUploads = await Promise.all(tempImages.map(({ file }) => uploadFile(file)))
+
+      const base64Images = extractBase64Images(data.content)
+      let processedContent = data.content
+      const contentUploadKeys: string[] = []
+
+      if (base64Images.length > 0) {
+        const uploadMap = await uploadBase64Images(base64Images)
+        processedContent = replaceBase64WithUrls(data.content, uploadMap)
+        uploadMap.forEach((result) => contentUploadKeys.push(result.key))
+      }
+
       await onSubmitAction({
         ...data,
-        images: [...persistedImages, ...uploads.map(({ url }) => url)],
-        uploadPathnames: uploads.map(({ pathname }) => pathname),
+        content: processedContent,
+        images: [...persistedImages, ...galleryUploads.map(({ url }) => url)],
+        uploadKeys: [...galleryUploads.map(({ key }) => key), ...contentUploadKeys],
       })
+
       tempImages.forEach(({ url }) => URL.revokeObjectURL(url))
       setTempImages([])
-      setValue("images", [...persistedImages, ...uploads.map(({ url }) => url)])
+      setValue("images", [...persistedImages, ...galleryUploads.map(({ url }) => url)])
+      setValue("content", processedContent)
       if (fileInputRef.current) fileInputRef.current.value = ""
       clearErrors("images")
     } catch (error) {
-      if (error instanceof BlobAccessError) {
+      if (error instanceof Error) {
         setError("images", {
           type: "manual",
           message: error.message,

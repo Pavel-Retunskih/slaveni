@@ -8,9 +8,13 @@
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.980.0",
     "@ckeditor/ckeditor5-icons": "^47.4.0",
     "@ckeditor/ckeditor5-react": "^11.0.1",
     "@floating-ui/react": "^0.27.16",
@@ -57,7 +61,6 @@
     "@tiptap/react": "^3.17.1",
     "@tiptap/starter-kit": "^3.17.1",
     "@vercel/analytics": "1.3.1",
-    "@vercel/blob": "^2.0.0",
     "autoprefixer": "^10.4.20",
     "ckeditor5": "^47.4.0",
     "class-variance-authority": "^0.7.1",
@@ -90,15 +93,22 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@types/aws-lambda": "^8.10.160",
     "@types/lodash.throttle": "^4.1.9",
     "@types/node": "25.0.9",
     "@types/react": "19.2.3",
     "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/ui": "^2.1.8",
+    "jsdom": "^25.0.1",
     "postcss": "^8.5",
     "prettier-plugin-tailwindcss": "^0.6.8",
     "sass": "^1.97.3",
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.4.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^2.1.8"
   }
 }

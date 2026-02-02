@@ -9,5 +9,5 @@ export interface NewsFormValues {
 }
 
 export interface NewsFormPayload extends NewsFormValues {
-  uploadPathnames?: string[]
+  uploadKeys?: string[]
 }
