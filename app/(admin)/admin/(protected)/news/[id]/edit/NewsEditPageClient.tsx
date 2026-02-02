@@ -1,8 +1,5 @@
 "use client"
 import { useRouter } from "next/navigation"
-import { NewsForm } from "@/features/news/ui/NewsForm"
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
 import { resolveApiResponse } from "@/shared/helpers/apiResponse"
 import { NewsJSON } from "@/shared/api/db/models/News"
 import { NewsFormPayload } from "@/shared/types/news"
@@ -29,6 +26,14 @@ export function NewsEditPageClient({ news }: NewsEditPageClientProps) {
         router.push("/admin/news")
         router.refresh()
     }
+    const onDelete = async () => {
+        const response = await fetch(`/api/news/${news.id}`, {
+            method: "DELETE",
+        })
+        await resolveApiResponse(response)
+        router.push("/admin/news")
+        router.refresh()
+    }
 
     return (
         <div className="w-full flex flex-col">
@@ -37,6 +42,7 @@ export function NewsEditPageClient({ news }: NewsEditPageClientProps) {
                     title="Редактирование новости"
                     initialData={news}
                     onSubmitAction={onSubmit}
+                    onDeleteAction={onDelete}
                 />
             </div>
         </div>

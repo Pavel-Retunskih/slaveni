@@ -7,16 +7,19 @@ import Link from "next/link"
 import { NewsJSON } from "@/shared/api/db/models/News"
 import { NewsFormPayload, NewsFormValues } from "@/shared/types/news"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { NewsFullDescriptionCard } from "@/entities/news/NewsFullDescriptionCard"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import z from "zod"
+import { Button } from "@/shared/components/ui/button"
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog"
 
 type Props = {
     title: string
     initialData?: NewsJSON
     onSubmitAction: (data: NewsFormPayload) => Promise<void>
+    onDeleteAction?: () => Promise<void>
 }
 const defaultValues: NewsFormValues = {
     title: "",
@@ -36,8 +39,9 @@ const newsSchema = z.object({
     isPublished: z.boolean(),
 })
 
-export function NewsFormShell({ title, initialData, onSubmitAction }: Props) {
+export function NewsFormShell({ title, initialData, onSubmitAction, onDeleteAction }: Props) {
 
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false)
 
     const methods = useForm<NewsFormValues>({
         defaultValues: { ...defaultValues, ...initialData },
@@ -92,11 +96,25 @@ export function NewsFormShell({ title, initialData, onSubmitAction }: Props) {
                             <NewsForm
                                 initialData={initialData}
                                 onSubmitAction={onSubmitAction}
+                                onDeleteAction={onDeleteAction ? <Button variant="destructive" type="button" onClick={() => setIsDeleteModalOpen(true)}>Удалить</Button> : undefined}
                             />
                         </TabsContent>
                     </Tabs>
                 </FormProvider>
-
+                <ConfirmDialog
+                    open={isDeleteModalOpen}
+                    onOpenChange={setIsDeleteModalOpen}
+                    title="Удалить новость"
+                    description="Вы уверены, что хотите удалить эту новость? Это действие нельзя отменить."
+                    confirmText="Удалить"
+                    cancelText="Отмена"
+                    onConfirm={async () => {
+                        if (onDeleteAction) {
+                            await onDeleteAction()
+                        }
+                    }}
+                    onCancel={() => setIsDeleteModalOpen(false)}
+                />
             </div>
         </div>
     )

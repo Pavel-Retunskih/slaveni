@@ -16,6 +16,8 @@ import { Switch } from "@/shared/components/ui/switch"
 import { NewsImagesField } from "./NewsImageField"
 import { RichTextEditor } from "@/shared/components/ui/rich-text-editor"
 import { Badge } from "@/shared/components/ui/badge"
+import DOMPurify from "dompurify"
+import type { ReactNode } from "react"
 
 type TempImage = {
   file: File
@@ -25,9 +27,10 @@ type TempImage = {
 interface NewsFormProps {
   initialData?: Partial<NewsFormValues>
   onSubmitAction: (data: NewsFormPayload) => Promise<void>
+  onDeleteAction?: ReactNode
 }
 
-export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
+export function NewsForm({ initialData, onSubmitAction, onDeleteAction }: NewsFormProps) {
   const { control, watch, handleSubmit, formState: { isSubmitting, errors, defaultValues }, setValue, getValues, setError, clearErrors } = useFormContext<NewsFormValues>()
 
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -114,9 +117,11 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
         uploadMap.forEach((result) => contentUploadKeys.push(result.key))
       }
 
+      const sanitizedContent = DOMPurify.sanitize(processedContent)
+
       await onSubmitAction({
         ...data,
-        content: processedContent,
+        content: sanitizedContent,
         images: [...persistedImages, ...galleryUploads.map(({ url }) => url)],
         uploadKeys: [...galleryUploads.map(({ key }) => key), ...contentUploadKeys],
       })
@@ -309,7 +314,8 @@ export function NewsForm({ initialData, onSubmitAction }: NewsFormProps) {
       </FieldGroup>
 
       {/* Submit button */}
-      <div className="flex justify-end gap-4 pt-4">
+      <div className="flex justify-between gap-4 pt-4">
+        {onDeleteAction}
         <Button type="submit" disabled={isSubmitting || Object.keys(errors).length > 0}>
           {isSubmitting ? (
             <>

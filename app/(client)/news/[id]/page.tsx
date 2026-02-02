@@ -7,7 +7,11 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/shared/components/ui
 import { Badge } from "@/shared/components/ui/badge"
 import { Button } from "@/shared/components/ui/button"
 import { Separator } from "@/shared/components/ui/separator"
-import DOMPurify from "dompurify"
+import { JSDOM } from "jsdom"
+import createDOMPurify from "dompurify"
+
+const window = new JSDOM("").window
+const DOMPurify = createDOMPurify(window)
 
 export async function generateStaticParams() {
     const news = await loadNews()
@@ -19,7 +23,7 @@ export async function generateStaticParams() {
 export default async function NewsPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
     const news = await loadNewsById(id)
-    const content = DOMPurify.sanitize(news.content)
+    const safeContent = DOMPurify.sanitize(news.content)
     return (
         <div className="min-h-screen bg-background">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -86,7 +90,7 @@ export default async function NewsPage({ params }: { params: Promise<{ id: strin
                     <CardContent>
                         <div
                             className="ck-content prose prose-lg max-w-none"
-                            dangerouslySetInnerHTML={{ __html: content }}
+                            dangerouslySetInnerHTML={{ __html: safeContent }}
                         />
                     </CardContent>
                 </Card>

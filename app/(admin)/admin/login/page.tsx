@@ -4,6 +4,7 @@ import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 import { LoginForm, LoginSchema } from "@/features/LoginForm"
+import { Button } from "@/shared/components/ui/button"
 
 export default function AdminLoginPage() {
     const router = useRouter()
@@ -35,13 +36,14 @@ export default function AdminLoginPage() {
     }
 
     return (
-        <div className="mx-auto max-w-md space-y-6 rounded-2xl border border-foreground/10 bg-foreground/5 p-8 text-foreground">
+        <div className="mx-auto max-w-md space-y-6 mt-20 rounded-2xl flex flex-col gap-4  border border-foreground/10 bg-foreground/5 p-8 text-foreground">
             <div className="space-y-2 text-center">
                 <p className="text-sm uppercase tracking-[0.4em] text-foreground/60">Admin</p>
                 <h1 className="text-2xl font-semibold">Вход в панель</h1>
                 <p className="text-sm text-foreground/70">Используйте корпоративные учётные данные</p>
             </div>
             <LoginForm onSubmit={handleSubmit} isSubmitting={isSubmitting} errorMessage={errorMessage} />
+            <Button onClick={() => router.push("/")}>На главную</Button>
         </div>
     )
 }

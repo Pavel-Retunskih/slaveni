@@ -121,3 +121,58 @@ export async function GET(
         )
     }
 }
+
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    await checkAuth()
+    const { id } = await params
+
+    try {
+        await dbConnect()
+        const newsArticle = await News.findByIdAndDelete(id)
+
+        if (!newsArticle) {
+            return Response.json(
+                { error: "News not found" },
+                { status: 404 }
+            )
+        }
+        const newsArticleImages = extractImageUrls(newsArticle.content)
+        const newsArticleGallery = newsArticle.images || []
+
+        const imagesToDelete = [...newsArticleImages, ...newsArticleGallery]
+
+        if (imagesToDelete.length > 0) {
+            const keys = imagesToDelete
+                .map((image) => extractUploadKeyFromUrl(image))
+                .filter((key): key is string => Boolean(key))
+            const legacyKeys = imagesToDelete
+                .filter(isLegacyBlobUrl)
+                .map((url) => extractLegacyBlobPath(url))
+                .filter((path): path is string => Boolean(path))
+
+            const allKeys = [...keys, ...legacyKeys]
+
+            if (allKeys.length > 0) {
+                try {
+                    await deleteUploadsByKeys(allKeys)
+                } catch (error) {
+                    console.error("Error deleting images:", error)
+                }
+            }
+        }
+
+        return Response.json({
+            success: true,
+            news: newsArticle.toJSON(),
+        })
+    } catch (error) {
+        console.error("Error deleting news:", error)
+        return Response.json(
+            { error: "Failed to delete news" },
+            { status: 500 }
+        )
+    }
+}
