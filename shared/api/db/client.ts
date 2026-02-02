@@ -1,5 +1,9 @@
 // lib/mongodb.js
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
 export async function dbConnect() {

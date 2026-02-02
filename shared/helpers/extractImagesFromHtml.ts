@@ -1,3 +1,5 @@
+import { isManagedUploadUrl } from "../lib/uploads"
+
 export function extractImageUrls(html: string): string[] {
     const imgRegex = /<img[^>]+src="([^">]+)"/g
     const urls: string[] = []
@@ -12,13 +14,11 @@ export function extractImageUrls(html: string): string[] {
     return urls
 }
 
-export function isBlobUrl(url: string): boolean {
-    return url.includes('.blob.vercel-storage.com')
-}
-
 export function findRemovedImages(oldHtml: string, newHtml: string): string[] {
-    const oldUrls = extractImageUrls(oldHtml).filter(isBlobUrl)
-    const newUrls = extractImageUrls(newHtml).filter(isBlobUrl)
-    
+    const oldUrls = extractImageUrls(oldHtml).filter(isManagedUploadUrl)
+    const newUrls = extractImageUrls(newHtml).filter(isManagedUploadUrl)
+
     return oldUrls.filter(url => !newUrls.includes(url))
 }
+
+export { isManagedUploadUrl }
