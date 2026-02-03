@@ -4,6 +4,7 @@ import { Badge } from "@/shared/components/ui/badge"
 import { Award, Medal, Shield, Star, Trophy } from "lucide-react"
 import { FadeIn } from "@/shared/components/fade-in"
 import { loadHonorees } from "@/shared/helpers/loadHonorees"
+import Image from "next/image"
 
 const departmentIconMap: { test: (value: string) => boolean; icon: typeof Award }[] = [
   { test: (value) => /руковод/i.test(value), icon: Trophy },
@@ -52,12 +53,23 @@ export default async function HonorBoardPage() {
               <FadeIn key={person.name} delay={0.1 * index}>
                 <Card className="group hover:shadow-xl transition-all hover:-translate-y-2 border-border/50 h-full">
                   <CardContent className="p-6 text-center">
-                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      {(() => {
-                        const Icon = pickDepartmentIcon(person.department)
-                        return <Icon className="w-10 h-10 text-primary" />
-                      })()}
-                    </div>
+                    {person.photo && typeof person.photo === 'string' ? (
+                      <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden relative">
+                        <Image
+                          src={person.photo}
+                          alt={person.name ?? ""}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                        {(() => {
+                          const Icon = pickDepartmentIcon(person.department)
+                          return <Icon className="w-10 h-10 text-primary" />
+                        })()}
+                      </div>
+                    )}
                     <h3 className="font-serif text-lg font-semibold text-foreground mb-1">
                       {person.name}
                     </h3>

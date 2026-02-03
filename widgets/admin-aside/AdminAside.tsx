@@ -12,6 +12,7 @@ const navItems = [
     { href: "/admin/news", label: "Новости" },
     { href: "/admin/vacancies", label: "Вакансии" },
     { href: "/admin/management", label: "Руководство" },
+    { href: "/admin/honorees", label: "Доска почета" },
 ]
 
 export const AdminAside = () => {
