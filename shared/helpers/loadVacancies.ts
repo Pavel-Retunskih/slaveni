@@ -11,6 +11,8 @@ export type VacancyDTO = {
     duties?: string[]
     benefits?: string[]
     urgent?: boolean
+    createdAt: Date
+    updatedAt: Date
 }
 
 export async function loadVacancies(): Promise<VacancyDTO[]> {

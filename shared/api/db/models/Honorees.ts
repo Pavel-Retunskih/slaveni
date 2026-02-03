@@ -7,7 +7,7 @@ const honoreesSchema = new mongoose.Schema({
     department: String,
     achievement: String,
     years: String
-})
+}, { timestamps: true })
 
 honoreesSchema.set("toJSON", {
     virtuals: true,
