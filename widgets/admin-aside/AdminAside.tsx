@@ -11,6 +11,7 @@ import { Button } from "@/shared/components/ui/button"
 const navItems = [
     { href: "/admin/news", label: "Новости" },
     { href: "/admin/vacancies", label: "Вакансии" },
+    { href: "/admin/management", label: "Руководство" },
 ]
 
 export const AdminAside = () => {
@@ -21,7 +22,7 @@ export const AdminAside = () => {
             <div className="mb-8 space-y-1">
                 <p className="text-sm uppercase tracking-[0.3em] text-muted-foreground">Admin</p>
                 <h1 className="text-2xl font-semibold text-foreground">Большие Славени</h1>
-                <p className="text-sm text-muted-foreground">Управление новостями и вакансиями предприятия</p>
+                <p className="text-sm text-muted-foreground">Управление контентом предприятия</p>
             </div>
 
             <NavigationMenu orientation="vertical" className="flex-1">
