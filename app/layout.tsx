@@ -4,6 +4,7 @@ import { Inter, Playfair_Display } from "next/font/google"
 import { Analytics } from "@vercel/analytics/react"
 import Script from "next/script"
 import { LenisProvider } from '@/shared/components/lenis-provider'
+import { Toaster } from 'sonner'
 import '..//styles/globals.css'
 import 'lenis/dist/lenis.css'
 
@@ -60,6 +61,7 @@ export default function RootLayout({
           {children}
         </LenisProvider>
         <Analytics />
+        <Toaster richColors position="bottom-right" />
       </body>
     </html>
   )

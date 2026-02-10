@@ -1,24 +1,40 @@
 "use client"
 
-import React from "react"
-
-import { useState } from "react"
+import { useForm, Controller } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Loader2, MapPin, Phone, Mail, Clock } from "lucide-react"
+import { toast } from "sonner"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Textarea } from "@/shared/components/ui/textarea"
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import { Field, FieldError, FieldLabel } from "@/shared/components/ui/field"
+import { contactFormSchema, type ContactFormValues } from "@/shared/types/contact"
 
 export function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    organization: "",
-    message: "",
+  const { control, handleSubmit, reset, formState: { isSubmitting } } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      organization: "",
+      message: "",
+    },
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Form submitted:", formData)
+  const onSubmit = async (data: ContactFormValues) => {
+    try {
+      // TODO: replace with actual API call
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      console.log("Form submitted:", data)
+      toast.success("Сообщение отправлено", {
+        description: "Мы свяжемся с вами в ближайшее время",
+      })
+      reset()
+    } catch {
+      toast.error("Ошибка отправки", {
+        description: "Попробуйте ещё раз позже",
+      })
+    }
   }
 
   const contactInfo = [
@@ -73,69 +89,105 @@ export function Contact() {
           </div>
 
           <div className="lg:col-span-3">
-            <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-6 md:p-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="bg-card border border-border rounded-lg p-6 md:p-8">
               <h3 className="font-serif text-xl font-semibold text-foreground mb-6">
                 Отправить сообщение
               </h3>
               <div className="grid sm:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-                    Имя
-                  </label>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="Ваше имя"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="bg-background"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-                    Email
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="bg-background"
-                  />
-                </div>
+                <Controller
+                  name="name"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="name">Имя</FieldLabel>
+                      <Input
+                        {...field}
+                        id="name"
+                        placeholder="Ваше имя"
+                        aria-invalid={fieldState.invalid}
+                        className="bg-background"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="email">Email</FieldLabel>
+                      <Input
+                        {...field}
+                        id="email"
+                        type="email"
+                        placeholder="your@email.com"
+                        aria-invalid={fieldState.invalid}
+                        className="bg-background"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
               </div>
               <div className="mb-4">
-                <label htmlFor="organization" className="block text-sm font-medium text-foreground mb-2">
-                  Организация
-                </label>
-                <Input
-                  id="organization"
-                  type="text"
-                  placeholder="Название компании"
-                  value={formData.organization}
-                  onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                  className="bg-background"
+                <Controller
+                  name="organization"
+                  control={control}
+                  render={({ field }) => (
+                    <Field>
+                      <FieldLabel htmlFor="organization">
+                        Организация <span className="text-muted-foreground font-normal">(необязательно)</span>
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="organization"
+                        placeholder="Название компании"
+                        className="bg-background"
+                      />
+                    </Field>
+                  )}
                 />
               </div>
               <div className="mb-6">
-                <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
-                  Сообщение
-                </label>
-                <Textarea
-                  id="message"
-                  placeholder="Ваше сообщение..."
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="bg-background resize-none"
+                <Controller
+                  name="message"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="message">Сообщение</FieldLabel>
+                      <Textarea
+                        {...field}
+                        id="message"
+                        placeholder="Ваше сообщение..."
+                        rows={4}
+                        aria-invalid={fieldState.invalid}
+                        className="bg-background resize-none"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
                 />
               </div>
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
               >
-                Отправить
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    Отправка...
+                  </>
+                ) : (
+                  "Отправить"
+                )}
               </Button>
             </form>
           </div>
