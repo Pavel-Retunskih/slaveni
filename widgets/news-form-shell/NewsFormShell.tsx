@@ -4,7 +4,7 @@ import { NewsForm } from "@/features/news/ui/NewsForm"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-import { NewsJSON } from "@/shared/api/db/models/News"
+import { INews } from "@/shared/api/db/models/News"
 import { NewsFormPayload, NewsFormValues } from "@/shared/types/news"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs"
 import { useMemo, useState } from "react"
@@ -17,7 +17,7 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog"
 
 type Props = {
     title: string
-    initialData?: NewsJSON
+    initialData?: INews
     onSubmitAction: (data: NewsFormPayload) => Promise<void>
     onDeleteAction?: () => Promise<void>
 }
@@ -55,7 +55,7 @@ export function NewsFormShell({ title, initialData, onSubmitAction, onDeleteActi
         }
     })
 
-    const newsPreview = useMemo<NewsJSON>(() => {
+    const newsPreview = useMemo<INews>(() => {
         return {
             id: initialData?.id ?? "draft",
             title: draft.title,

@@ -1,6 +1,20 @@
-import mongoose, { HydratedDocument, InferSchemaType, Model, Types } from "mongoose";
+import mongoose from "mongoose"
 
-const vacancySchema = new mongoose.Schema({
+export interface IVacancy {
+    id: string
+    title: string
+    department: string
+    type: string
+    salary: string
+    requirements: string[]
+    duties: string[]
+    benefits: string[]
+    urgent: boolean
+    createdAt: Date
+    updatedAt: Date
+}
+
+const vacancySchema = new mongoose.Schema<IVacancy>({
     title: {
         type: String,
         required: [true, "Название вакансии обязательно"],
@@ -40,19 +54,15 @@ const vacancySchema = new mongoose.Schema({
 vacancySchema.set("toJSON", {
     virtuals: true,
     versionKey: false,
-    transform: (_doc, ret: VacancySchemaType & { _id?: Types.ObjectId; id?: string }) => {
-        if (ret._id) {
-            ret.id = ret._id.toString()
+    transform: (_doc, ret) => {
+        const typedRet = ret as typeof ret & { _id?: mongoose.Types.ObjectId }
+
+        if (typedRet._id) {
+            typedRet.id = typedRet._id.toString()
         }
 
-        Reflect.deleteProperty(ret, "_id")
+        Reflect.deleteProperty(typedRet, "_id")
     }
 })
 
-type VacancySchemaType = InferSchemaType<typeof vacancySchema>
-
-export const Vacancy: Model<VacancyDocument> = mongoose.models.Vacancy || mongoose.model<VacancyDocument>("Vacancy", vacancySchema);
-
-export type VacancyDocument = HydratedDocument<VacancySchemaType>
-
-export type VacancyJSON = VacancySchemaType & { id: string }
+export const Vacancy = mongoose.models.Vacancy as mongoose.Model<IVacancy> || mongoose.model<IVacancy>("Vacancy", vacancySchema)

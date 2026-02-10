@@ -2,10 +2,10 @@
 import { useRouter } from "next/navigation"
 import type { ManagementFormPayload } from "@/shared/types/management"
 import { ManagementFormShell } from "@/widgets/management-form-shell/ManagementFormShell"
-import { ManagementDocument } from "@/shared/api/db/models/Management"
+import { IManagement } from "@/shared/api/db/models/Management"
 
 type Props = {
-    management: ManagementDocument
+    management: IManagement
 }
 
 export const ManagementEditPageClient = ({ management }: Props) => {

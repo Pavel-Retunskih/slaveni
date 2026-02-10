@@ -2,10 +2,10 @@
 import { useRouter } from "next/navigation"
 import type { VacancyFormPayload } from "@/shared/types/vacancy"
 import { VacancyFormShell } from "@/widgets/vacancy-form-shell/VacancyFormShell"
-import { VacancyJSON } from "@/shared/api/db/models/Vacancy"
+import { IVacancy } from "@/shared/api/db/models/Vacancy"
 
 type Props = {
-    vacancy: VacancyJSON
+    vacancy: IVacancy
 }
 
 export const VacancyEditPageClient = ({ vacancy }: Props) => {

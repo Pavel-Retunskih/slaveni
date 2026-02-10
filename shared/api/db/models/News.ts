@@ -1,6 +1,19 @@
-import mongoose, { HydratedDocument, InferSchemaType, Model, Types } from "mongoose";
+import mongoose from "mongoose"
 
-const newsSchema = new mongoose.Schema(
+export interface INews {
+    id: string
+    title: string
+    category: string
+    excerpt: string
+    content: string
+    images: string[]
+    featured: boolean
+    isPublished: boolean
+    createdAt: Date
+    updatedAt: Date
+}
+
+const newsSchema = new mongoose.Schema<INews>(
     {
         title: {
             type: String,
@@ -32,19 +45,15 @@ const newsSchema = new mongoose.Schema(
 newsSchema.set("toJSON", {
     virtuals: true,
     versionKey: false,
-    transform: (_doc, ret: NewsSchemaType & { _id?: Types.ObjectId; id?: string }) => {
-        if (ret._id) {
-            ret.id = ret._id.toString()
+    transform: (_doc, ret) => {
+        const typedRet = ret as typeof ret & { _id?: mongoose.Types.ObjectId }
+
+        if (typedRet._id) {
+            typedRet.id = typedRet._id.toString()
         }
 
-        Reflect.deleteProperty(ret, "_id")
+        Reflect.deleteProperty(typedRet, "_id")
     },
 })
 
-type NewsSchemaType = InferSchemaType<typeof newsSchema>
-
-export const News: Model<NewsDocument> = mongoose.models.News || mongoose.model<NewsDocument>("News", newsSchema);
-
-export type NewsDocument = HydratedDocument<NewsSchemaType>
-
-export type NewsJSON = NewsSchemaType & { id: string }
+export const News = mongoose.models.News as mongoose.Model<INews> || mongoose.model<INews>("News", newsSchema)

@@ -1,7 +1,21 @@
-import mongoose, { InferSchemaType } from "mongoose"
+import mongoose from "mongoose"
 
-const managementSchema = new mongoose.Schema({
-    id: { type: String },
+export interface IManagement {
+    id: string
+    name: string
+    position: string
+    department: string
+    description: string
+    responsibilities: string[]
+    phone?: string
+    email?: string
+    image?: string
+    isDirector: boolean
+    createdAt: Date
+    updatedAt: Date
+}
+
+const managementSchema = new mongoose.Schema<IManagement>({
     name: { type: String, required: true },
     position: { type: String, required: true },
     department: { type: String, required: true },
@@ -26,6 +40,5 @@ managementSchema.set("toJSON", {
         Reflect.deleteProperty(typedRet, "_id")
     }
 })
-export const Management: mongoose.Model<ManagementDocument> = mongoose.models.Management || mongoose.model<ManagementDocument>("Management", managementSchema);
 
-export type ManagementDocument = InferSchemaType<typeof managementSchema>
+export const Management = mongoose.models.Management as mongoose.Model<IManagement> || mongoose.model<IManagement>("Management", managementSchema)

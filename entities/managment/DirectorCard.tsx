@@ -1,10 +1,10 @@
-import { ManagementDocument } from "@/shared/api/db/models/Management"
+import { IManagement } from "@/shared/api/db/models/Management"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { Badge } from "@/shared/components/ui/badge"
 import Image from "next/image"
 import { Mail, Phone } from "lucide-react"
 
-export const DirectorCard = ({ director }: { director: ManagementDocument }) => {
+export const DirectorCard = ({ director }: { director: IManagement }) => {
     return (
         <Card className="max-w-4xl mx-auto p-0 overflow-hidden">
             <CardContent className="p-0">

@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { Separator } from "@/shared/components/ui/separator"
-import { NewsJSON } from "@/shared/api/db/models/News"
+import { INews } from "@/shared/api/db/models/News"
 import { Badge } from "@/shared/components/ui/badge"
 import { ImageCarousel } from "@/shared/components/ui/image-carousel"
 import { ImageCarouselPreview } from "@/shared/components/ui/image-carousel-preview"
 
-export const NewsFullDescriptionCard = ({ news, newsId, safeContent, isPreview = false }: { news: NewsJSON; newsId: string; safeContent: string; isPreview?: boolean }) => {
+export const NewsFullDescriptionCard = ({ news, newsId, safeContent, isPreview = false }: { news: INews; newsId: string; safeContent: string; isPreview?: boolean }) => {
     return (
         <Card className="overflow-hidden">
             <CardHeader className="border-b">

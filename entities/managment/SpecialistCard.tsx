@@ -1,9 +1,9 @@
-import { ManagementDocument } from "@/shared/api/db/models/Management"
+import { IManagement } from "@/shared/api/db/models/Management"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { Badge } from "@/shared/components/ui/badge"
 import Image from "next/image"
 
-export const SpecialistCard = ({ specialist }: { specialist: ManagementDocument }) => {
+export const SpecialistCard = ({ specialist }: { specialist: IManagement }) => {
     return (
         <Card className="overflow-hidden hover:shadow-lg h-full pt-0 transition-shadow">
             <div className="relative bg-muted aspect-3/2 overflow-hidden">

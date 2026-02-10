@@ -4,7 +4,7 @@ import { ManagementForm } from "@/features/management/ui/ManagementForm"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-import { ManagementDocument } from "@/shared/api/db/models/Management"
+import { IManagement } from "@/shared/api/db/models/Management"
 import { ManagementFormPayload, ManagementFormValues } from "@/shared/types/management"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs"
 import { useMemo, useState } from "react"
@@ -18,7 +18,7 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog"
 
 type Props = {
     title: string
-    initialData?: ManagementDocument
+    initialData?: IManagement
     onSubmitAction: (data: ManagementFormPayload) => Promise<void>
     onDeleteAction?: () => Promise<void>
     isDirector: boolean
@@ -64,7 +64,7 @@ export function ManagementFormShell({ title, initialData, onSubmitAction, onDele
         }
     })
 
-    const managementPreview = useMemo<ManagementDocument>(() => {
+    const managementPreview = useMemo<IManagement>(() => {
         return {
             id: initialData?.id ?? "draft",
             name: draft.name,
@@ -80,9 +80,9 @@ export function ManagementFormShell({ title, initialData, onSubmitAction, onDele
             updatedAt: initialData?.updatedAt ?? new Date(),
         }
     }, [draft, initialData])
-    
+
     const isPreviewDisabled = !initialData && !methods.formState.isDirty
-    
+
     return (
         <div className="w-full flex flex-col">
             <div className="flex items-center gap-4 mb-6">

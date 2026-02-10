@@ -4,7 +4,7 @@ import { VacancyForm } from "@/features/vacancy/ui/VacancyForm"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-import { VacancyJSON } from "@/shared/api/db/models/Vacancy"
+import { IVacancy } from "@/shared/api/db/models/Vacancy"
 import { VacancyFormPayload, VacancyFormValues } from "@/shared/types/vacancy"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs"
 import { useMemo, useState } from "react"
@@ -17,7 +17,7 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog"
 
 type Props = {
     title: string
-    initialData?: VacancyJSON
+    initialData?: IVacancy
     onSubmitAction: (data: VacancyFormPayload) => Promise<void>
     onDeleteAction?: () => Promise<void>
 }
@@ -58,7 +58,7 @@ export function VacancyFormShell({ title, initialData, onSubmitAction, onDeleteA
         }
     })
 
-    const vacancyPreview = useMemo<VacancyJSON>(() => {
+    const vacancyPreview = useMemo<IVacancy>(() => {
         return {
             id: initialData?.id ?? "draft",
             title: draft.title,

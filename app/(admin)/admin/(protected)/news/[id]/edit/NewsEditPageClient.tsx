@@ -1,12 +1,12 @@
 "use client"
 import { useRouter } from "next/navigation"
 import { resolveApiResponse } from "@/shared/helpers/apiResponse"
-import { NewsJSON } from "@/shared/api/db/models/News"
+import { INews } from "@/shared/api/db/models/News"
 import { NewsFormPayload } from "@/shared/types/news"
 import { NewsFormShell } from "@/widgets/news-form-shell/NewsFormShell"
 
 interface NewsEditPageClientProps {
-    news: NewsJSON
+    news: INews
 }
 
 export function NewsEditPageClient({ news }: NewsEditPageClientProps) {

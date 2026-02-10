@@ -2,21 +2,10 @@
 import { useRouter } from "next/navigation"
 import type { HonoreeFormPayload } from "@/shared/types/honoree"
 import { HonoreeFormShell } from "@/widgets/honoree-form-shell/HonoreeFormShell"
-
-type HonoreeJSON = {
-    id: string
-    name: string
-    position: string
-    department: string
-    achievement: string
-    years: string
-    photo?: string
-    createdAt: Date
-    updatedAt: Date
-}
+import { IHonoree } from "@/shared/api/db/models/Honorees"
 
 type Props = {
-    honoree: HonoreeJSON
+    honoree: IHonoree
 }
 
 export const HonoreeEditPageClient = ({ honoree }: Props) => {

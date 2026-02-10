@@ -4,6 +4,7 @@ import { HonoreeForm } from "@/features/honoree/ui/HonoreeForm"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
+import { IHonoree } from "@/shared/api/db/models/Honorees"
 import { HonoreeFormPayload, HonoreeFormValues } from "@/shared/types/honoree"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs"
 import { useMemo, useState } from "react"
@@ -14,21 +15,9 @@ import z from "zod"
 import { Button } from "@/shared/components/ui/button"
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog"
 
-type HonoreeJSON = {
-    id: string
-    name: string
-    position: string
-    department: string
-    achievement: string
-    years: string
-    photo?: string
-    createdAt: Date
-    updatedAt: Date
-}
-
 type Props = {
     title: string
-    initialData?: HonoreeJSON
+    initialData?: IHonoree
     onSubmitAction: (data: HonoreeFormPayload) => Promise<void>
     onDeleteAction?: () => Promise<void>
 }
@@ -67,7 +56,7 @@ export function HonoreeFormShell({ title, initialData, onSubmitAction, onDeleteA
         }
     })
 
-    const honoreePreview = useMemo<HonoreeJSON>(() => {
+    const honoreePreview = useMemo<IHonoree>(() => {
         return {
             id: initialData?.id ?? "draft",
             name: draft.name,

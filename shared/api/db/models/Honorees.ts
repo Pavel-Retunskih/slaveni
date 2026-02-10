@@ -1,12 +1,23 @@
-import mongoose, { InferSchemaType } from "mongoose"
+import mongoose from "mongoose"
 
-const honoreesSchema = new mongoose.Schema({
-    id: String,
-    name: String,
-    position: String,
-    department: String,
-    achievement: String,
-    years: String,
+export interface IHonoree {
+    id: string
+    name: string
+    position: string
+    department: string
+    achievement: string
+    years: string
+    photo?: string
+    createdAt: Date
+    updatedAt: Date
+}
+
+const honoreesSchema = new mongoose.Schema<IHonoree>({
+    name: { type: String, required: true },
+    position: { type: String, required: true },
+    department: { type: String, required: true },
+    achievement: { type: String, required: true },
+    years: { type: String, required: true },
     photo: String
 }, { timestamps: true })
 
@@ -24,5 +35,4 @@ honoreesSchema.set("toJSON", {
     }
 })
 
-export const Honorees: mongoose.Model<InferSchemaType<typeof honoreesSchema>> = mongoose.models.Honorees || mongoose.model("Honorees", honoreesSchema)
-export type HonoreesDocument = InferSchemaType<typeof honoreesSchema>
+export const Honorees = mongoose.models.Honorees as mongoose.Model<IHonoree> || mongoose.model<IHonoree>("Honorees", honoreesSchema)
