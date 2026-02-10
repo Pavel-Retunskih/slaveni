@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { usePathname } from "next/navigation"
 import { Menu, X, Wheat } from "lucide-react"
 import { Button } from "@/shared/components/ui/button"
 import Link from "next/link"
@@ -17,6 +18,7 @@ const navItems = [
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
@@ -28,15 +30,21 @@ export function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-sm font-medium transition-colors ${isActive
+                      ? "text-foreground border-b-2 border-primary pb-0.5"
+                      : "text-muted-foreground hover:text-foreground"
+                    }`}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
           </nav>
 
           <div className="hidden md:block">
@@ -59,16 +67,22 @@ export function Header() {
       {isOpen && (
         <div className="md:hidden border-t border-border bg-background">
           <nav className="flex flex-col px-4 py-4 gap-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`text-base font-medium transition-colors ${isActive
+                      ? "text-foreground font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              )
+            })}
             <Button variant="default" className="mt-2 bg-primary hover:bg-primary/90 text-primary-foreground w-full">
               Связаться
             </Button>
