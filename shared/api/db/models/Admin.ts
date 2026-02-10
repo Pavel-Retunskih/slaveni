@@ -10,6 +10,10 @@ const adminScema = new mongoose.Schema({
 adminScema.pre('save', async function () {
     if (!this.isModified('password')) return
 
+    // Prevent double-hashing if password is already a bcrypt hash
+    const isBcryptHash = /^\$2[aby]\$\d{2}\$/.test(this.password)
+    if (isBcryptHash) return
+
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password, salt)
 })

@@ -29,10 +29,17 @@ export const authOptions: NextAuthOptions = {
 
                 const admin = await Admin.findOne({ login: credentials.login })
                 if (!admin) {
+                    console.log("[AUTH] Admin not found:", credentials.login)
                     return null
                 }
 
+                console.log("[AUTH] Admin found:", admin.login)
+                console.log("[AUTH] Stored hash prefix:", admin.password?.substring(0, 10))
+                console.log("[AUTH] Has comparePassword:", typeof admin.comparePassword)
+
                 const isPasswordValid = await admin.comparePassword(credentials.password)
+                console.log("[AUTH] Password valid:", isPasswordValid)
+
                 if (!isPasswordValid) {
                     return null
                 }
