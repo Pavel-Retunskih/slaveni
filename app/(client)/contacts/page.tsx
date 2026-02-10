@@ -221,6 +221,26 @@ export default function ContactsPage() {
                         </FadeIn>
                     </div>
                 </section>
+                {/* Map Section */}
+                <section className="py-12">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <FadeIn delay={0.15}>
+                            <Card className="border-primary/20 overflow-hidden">
+                                <CardContent className="p-0">
+                                    <iframe
+                                        src="https://yandex.ru/map-widget/v1/?ll=30.432227%2C54.270943&z=15&pt=30.432227%2C54.270943%2Cpm2rdm"
+                                        width="100%"
+                                        height="450"
+                                        frameBorder="0"
+                                        allowFullScreen
+                                        className="w-full h-[300px] md:h-[450px]"
+                                        title="Местоположение предприятия на карте"
+                                    />
+                                </CardContent>
+                            </Card>
+                        </FadeIn>
+                    </div>
+                </section>
             </main>
         </div>
     )
