@@ -231,7 +231,6 @@ export default function ContactsPage() {
                                         src="https://yandex.ru/map-widget/v1/?ll=30.432227%2C54.270943&z=15&pt=30.432227%2C54.270943%2Cpm2rdm"
                                         width="100%"
                                         height="450"
-                                        frameBorder="0"
                                         allowFullScreen
                                         className="w-full h-[300px] md:h-[450px]"
                                         title="Местоположение предприятия на карте"
