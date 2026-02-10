@@ -1,4 +1,3 @@
-import { Header } from "@/shared/components/header"
 import { Button } from "@/shared/components/ui/button"
 import {
   Dialog,
@@ -21,8 +20,6 @@ export default async function VacanciesPage() {
 
   return (
     <main className="font-sans">
-      <Header />
-
       <section className="pt-32 pb-16 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeIn className="text-center mb-12">

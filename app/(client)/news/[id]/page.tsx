@@ -23,8 +23,8 @@ export default async function NewsPage({ params }: { params: Promise<{ id: strin
     const safeContent = DOMPurify.sanitize(news.content)
     return (
         <div className="min-h-screen bg-background">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <Button variant="ghost" size="sm" asChild className="mb-8">
+            <div className="max-w-4xl mx-auto px-4 md:pt-20 sm:px-6 lg:px-8 py-12">
+                <Button variant="ghost" size="sm" asChild className="my-4">
                     <Link href="/news">
                         <ArrowLeft className="w-4 h-4" />
                         Назад к новостям

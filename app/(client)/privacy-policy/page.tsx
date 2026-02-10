@@ -1,4 +1,3 @@
-import { Header } from "@/shared/components/header"
 import { FadeIn } from "@/shared/components/fade-in"
 import type { Metadata } from "next"
 
@@ -116,8 +115,6 @@ const sections = [
 export default function PrivacyPolicyPage() {
     return (
         <div className="min-h-screen bg-background">
-            <Header />
-
             <main className="pt-20">
                 {/* Hero Section */}
                 <section className="bg-primary py-8 md:py-12">

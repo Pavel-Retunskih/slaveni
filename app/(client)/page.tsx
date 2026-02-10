@@ -1,4 +1,3 @@
-import { Header } from "@/shared/components/header"
 import { Hero } from "@/shared/components/hero"
 import { About } from "@/shared/components/about"
 import { Services } from "@/shared/components/services"
@@ -12,7 +11,6 @@ const TOTAL_SECTIONS = 6
 export default function Home() {
   return (
     <div className="relative">
-      <Header />
       <StackingSection index={0} totalSections={TOTAL_SECTIONS}>
         <Hero />
       </StackingSection>

@@ -1,4 +1,3 @@
-import { Header } from "@/shared/components/header"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { Badge } from "@/shared/components/ui/badge"
 import { Award, Medal, Shield, Star, Trophy } from "lucide-react"
@@ -29,8 +28,6 @@ export default async function HonorBoardPage() {
 
   return (
     <main className="font-sans">
-      <Header />
-
       <section className="pt-32 pb-16 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeIn className="text-center mb-12">

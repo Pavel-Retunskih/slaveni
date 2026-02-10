@@ -1,4 +1,3 @@
-import { Header } from "@/shared/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card"
 import { Phone, Mail, MapPin, Building2, FileText, ShoppingCart, Scale, Users } from "lucide-react"
 import { FadeIn } from "@/shared/components/fade-in"
@@ -63,8 +62,6 @@ const contactSections = [
 export default function ContactsPage() {
     return (
         <div className="min-h-screen bg-background">
-            <Header />
-
             <main className="pt-20">
                 {/* Hero Section */}
                 <section className="bg-primary py-8 md:py-12">

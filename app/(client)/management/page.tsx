@@ -1,4 +1,3 @@
-import { Header } from "@/shared/components/header"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { Phone, Mail, Building2 } from "lucide-react"
 import { FadeIn } from "@/shared/components/fade-in"
@@ -11,8 +10,6 @@ export default async function ManagementPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-
       <main className="pt-20">
         {/* Hero Section */}
         <section className="bg-primary py-8 md:py-12">
