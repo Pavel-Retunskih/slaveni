@@ -28,13 +28,13 @@ export function LenisProvider({ children }: LenisProviderProps) {
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
-      touchMultiplier: 2,
+      touchMultiplier: 1,
     })
 
     lenisRef.current = lenis
     setLenisInstance(lenis)
 
-    ;(window as unknown as { lenis: Lenis }).lenis = lenis
+      ; (window as unknown as { lenis: Lenis }).lenis = lenis
 
     function raf(time: number) {
       lenis.raf(time)

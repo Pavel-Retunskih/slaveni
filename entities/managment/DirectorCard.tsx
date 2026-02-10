@@ -9,11 +9,13 @@ export const DirectorCard = ({ director }: { director: ManagementDocument }) => 
         <Card className="max-w-4xl mx-auto p-0 overflow-hidden">
             <CardContent className="p-0">
                 <div className="grid md:grid-cols-2 gap-0">
-                    <div className="relative h-80 md:h-auto bg-muted">
+                    <div className="relative aspect-3/4 md:h-auto bg-muted">
                         <Image
                             src={director.image || "/placeholder.svg"}
                             alt={director.name}
                             fill
+                            priority
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-cover"
                         />
                     </div>

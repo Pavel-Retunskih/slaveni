@@ -3,16 +3,20 @@ import { Management } from "@/shared/api/db/models/Management"
 import { checkAuth } from "@/shared/helpers/checkAuth"
 import { createErrorResponse, createSuccessResponse } from "@/shared/helpers/apiResponse"
 import type { ManagementFormPayload } from "@/shared/types/management"
+import { deleteUploadsByKeys } from "@/shared/lib/server/storage"
 import mongoose from "mongoose"
 
 export async function POST(request: Request) {
     await checkAuth()
 
+    let tempUploadKey: string | undefined
+
     try {
         await dbConnect()
         const body: ManagementFormPayload = await request.json()
 
-        const { name, position, department, description, phone, email, image, responsibilities, isDirector } = body
+        const { name, position, department, description, phone, email, image, responsibilities, isDirector, uploadKey } = body
+        tempUploadKey = uploadKey
 
         if (isDirector) {
             const existingDirector = await Management.findOne({ isDirector: true })
@@ -41,6 +45,10 @@ export async function POST(request: Request) {
 
         return Response.json(createSuccessResponse({ management: management.toJSON() }), { status: 201 })
     } catch (error) {
+        if (tempUploadKey) {
+            await deleteUploadsByKeys([tempUploadKey]).catch(() => { })
+        }
+
         if (error instanceof mongoose.Error.ValidationError) {
             const fields = Object.entries(error.errors).reduce<Record<string, { message: string }>>(
                 (acc, [field, validatorError]) => {

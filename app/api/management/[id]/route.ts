@@ -2,6 +2,8 @@ import { dbConnect } from "@/shared/api/db/client"
 import { Management } from "@/shared/api/db/models/Management"
 import { NextRequest } from "next/server"
 import { checkAuth } from "@/shared/helpers/checkAuth"
+import { deleteUploadsByKeys } from "@/shared/lib/server/storage"
+import { isManagedUploadUrl, extractUploadKeyFromUrl, isLegacyBlobUrl, extractLegacyBlobPath } from "@/shared/lib/uploads"
 
 export async function GET(
     request: NextRequest,
@@ -88,6 +90,15 @@ export async function PUT(
             )
         }
 
+        if (existingRecord.image && isManagedUploadUrl(existingRecord.image) && existingRecord.image !== image) {
+            const key = extractUploadKeyFromUrl(existingRecord.image)
+            const legacyKey = isLegacyBlobUrl(existingRecord.image) ? extractLegacyBlobPath(existingRecord.image) : null
+            const keysToDelete = [key, legacyKey].filter((k): k is string => Boolean(k))
+            if (keysToDelete.length > 0) {
+                await deleteUploadsByKeys(keysToDelete).catch((err) => console.error("Failed to delete old image:", err))
+            }
+        }
+
         return Response.json({
             success: true,
             management: updatedManagement.toJSON(),
@@ -117,6 +128,15 @@ export async function DELETE(
                 { error: "Management record not found" },
                 { status: 404 }
             )
+        }
+
+        if (management.image && isManagedUploadUrl(management.image)) {
+            const key = extractUploadKeyFromUrl(management.image)
+            const legacyKey = isLegacyBlobUrl(management.image) ? extractLegacyBlobPath(management.image) : null
+            const keysToDelete = [key, legacyKey].filter((k): k is string => Boolean(k))
+            if (keysToDelete.length > 0) {
+                await deleteUploadsByKeys(keysToDelete).catch((err) => console.error("Failed to delete image:", err))
+            }
         }
 
         return Response.json({

@@ -10,4 +10,6 @@ export interface ManagementFormValues {
   isDirector: boolean
 }
 
-export interface ManagementFormPayload extends ManagementFormValues {}
+export interface ManagementFormPayload extends ManagementFormValues {
+  uploadKey?: string
+}

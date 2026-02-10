@@ -1,91 +1,148 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Button } from "@/shared/components/ui/button"
 import { Upload, X } from "lucide-react"
 import Image from "next/image"
+import { ImageCropDialog } from "@/shared/components/image-crop-dialog"
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
+const MAX_SIZE_BYTES = 5 * 1024 * 1024
 
 interface ImageUploadProps {
   value?: string
-  onChange: (value: string) => void
+  onFileSelect: (file: File, previewUrl: string) => void
+  onRemove: () => void
+  isLocal?: boolean
+  aspectRatio?: number
+  cropShape?: "rect" | "round"
 }
 
-export function ImageUpload({ value, onChange }: ImageUploadProps) {
-  const [isUploading, setIsUploading] = useState(false)
+export function ImageUpload({
+  value,
+  onFileSelect,
+  onRemove,
+  isLocal,
+  aspectRatio,
+  cropShape = "rect",
+}: ImageUploadProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [cropSrc, setCropSrc] = useState<string | null>(null)
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    setIsUploading(true)
+    if (inputRef.current) {
+      inputRef.current.value = ""
+    }
 
-    try {
-      const formData = new FormData()
-      formData.append("file", file)
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setError("Допустимые форматы: JPEG, PNG, WebP")
+      return
+    }
 
-      const response = await fetch("/api/blob/upload", {
-        method: "POST",
-        body: formData,
-      })
+    if (file.size > MAX_SIZE_BYTES) {
+      setError("Максимальный размер файла — 5 МБ")
+      return
+    }
 
-      if (!response.ok) {
-        throw new Error("Failed to upload image")
-      }
+    setError(null)
 
-      const data = await response.json()
-      onChange(data.url)
-    } catch (error) {
-      console.error("Error uploading image:", error)
-    } finally {
-      setIsUploading(false)
+    if (aspectRatio) {
+      const objectUrl = URL.createObjectURL(file)
+      setCropSrc(objectUrl)
+    } else {
+      const previewUrl = URL.createObjectURL(file)
+      onFileSelect(file, previewUrl)
     }
   }
 
-  const handleRemove = () => {
-    onChange("")
+  const handleCropComplete = (croppedFile: File, previewUrl: string) => {
+    if (cropSrc) {
+      URL.revokeObjectURL(cropSrc)
+    }
+    setCropSrc(null)
+    onFileSelect(croppedFile, previewUrl)
   }
+
+  const handleCropCancel = () => {
+    if (cropSrc) {
+      URL.revokeObjectURL(cropSrc)
+    }
+    setCropSrc(null)
+  }
+
+  const aspectStyle = aspectRatio
+    ? { aspectRatio: String(aspectRatio) }
+    : undefined
 
   return (
     <div className="space-y-4">
       {value ? (
-        <div className="relative w-full max-w-md">
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg border">
+        <div className="relative w-fit max-w-md">
+          <div
+            className={`relative w-fit max-w-full overflow-hidden border ${!aspectStyle ? "" : ""
+              } ${isLocal ? "border-dashed border-border/80 bg-muted/40" : ""} ${cropShape === "round" ? "rounded-full max-w-[200px]" : "rounded-lg"
+              }`}
+            style={aspectStyle}
+          >
             <Image
               src={value}
               alt="Uploaded image"
-              fill
-              className="object-cover"
+              width={0}
+              height={0}
+              sizes="100vw"
+              className={`h-auto w-auto max-w-full max-h-[400px] object-cover ${isLocal ? "opacity-80" : ""}`}
             />
           </div>
           <Button
             type="button"
             variant="destructive"
             size="icon"
-            className="absolute top-2 right-2"
-            onClick={handleRemove}
+            className={`absolute top-[-15px] right-[-15px] ${cropShape === "round" ? "top-0 right-0" : ""}`}
+            onClick={onRemove}
           >
             <X className="w-4 h-4" />
           </Button>
         </div>
       ) : (
-        <div className="flex items-center gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isUploading}
-            onClick={() => document.getElementById("image-upload")?.click()}
-          >
-            <Upload className="w-4 h-4 mr-2" />
-            {isUploading ? "Загрузка..." : "Загрузить изображение"}
-          </Button>
-          <input
-            id="image-upload"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleFileChange}
-          />
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => inputRef.current?.click()}
+            >
+              <Upload className="w-4 h-4 mr-2" />
+              Загрузить изображение
+            </Button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </div>
+          {error && (
+            <p className="text-sm text-destructive">{error}</p>
+          )}
         </div>
+      )}
+
+      {cropSrc && aspectRatio && (
+        <ImageCropDialog
+          open={!!cropSrc}
+          onOpenChange={(open) => {
+            if (!open) handleCropCancel()
+          }}
+          imageSrc={cropSrc}
+          aspect={aspectRatio}
+          cropShape={cropShape}
+          onCropComplete={handleCropComplete}
+        />
       )}
     </div>
   )

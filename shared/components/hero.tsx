@@ -6,7 +6,7 @@ import { ParallaxLayer } from "@/shared/components/parallax-layer"
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-dvh flex items-center justify-center overflow-hidden">
       <ParallaxLayer speed={-0.05} className="absolute inset-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"

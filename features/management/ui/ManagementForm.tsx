@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Textarea } from "@/shared/components/ui/textarea"
@@ -11,6 +11,12 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/s
 import { Separator } from "@/shared/components/ui/separator"
 import type { ReactNode } from "react"
 import { ImageUpload } from "@/shared/components/image-upload"
+import { uploadFile } from "@/shared/helpers/uploadFile"
+
+type TempImage = {
+  file: File
+  url: string
+}
 
 interface ManagementFormProps {
   initialData?: Partial<ManagementFormValues>
@@ -22,6 +28,25 @@ export function ManagementForm({ initialData, onSubmitAction, onDeleteAction }: 
   const { control, watch, handleSubmit, formState: { isSubmitting, errors }, setValue, getValues, setError } = useFormContext<ManagementFormValues>()
 
   const [newResponsibility, setNewResponsibility] = useState("")
+  const [tempImage, setTempImage] = useState<TempImage | null>(null)
+
+  const isLocalImage = useCallback((url: string) => tempImage?.url === url, [tempImage])
+
+  const handleImageSelect = (file: File, previewUrl: string) => {
+    if (tempImage) {
+      URL.revokeObjectURL(tempImage.url)
+    }
+    setTempImage({ file, url: previewUrl })
+    setValue("image", previewUrl, { shouldDirty: true })
+  }
+
+  const handleImageRemove = () => {
+    if (tempImage) {
+      URL.revokeObjectURL(tempImage.url)
+      setTempImage(null)
+    }
+    setValue("image", "", { shouldDirty: true })
+  }
 
   const watchedResponsibilities = watch("responsibilities") ?? []
   const isDirector = watch("isDirector")
@@ -42,7 +67,25 @@ export function ManagementForm({ initialData, onSubmitAction, onDeleteAction }: 
 
   const onSubmit = async (data: ManagementFormValues) => {
     try {
-      await onSubmitAction(data)
+      let imageUrl = data.image ?? ""
+      let uploadKey: string | undefined
+
+      if (tempImage && isLocalImage(imageUrl)) {
+        const result = await uploadFile(tempImage.file)
+        imageUrl = result.url
+        uploadKey = result.key
+      }
+
+      await onSubmitAction({
+        ...data,
+        image: imageUrl,
+        uploadKey,
+      })
+
+      if (tempImage) {
+        URL.revokeObjectURL(tempImage.url)
+        setTempImage(null)
+      }
     } catch (error) {
       if (error instanceof Error && error.name === "ValidationError" && "fields" in error && typeof error.fields === "object" && error.fields !== null) {
         Object.entries(error.fields).forEach(([name, { message }]) => setError(name as keyof ManagementFormValues, {
@@ -171,7 +214,11 @@ export function ManagementForm({ initialData, onSubmitAction, onDeleteAction }: 
               <FieldDescription className="text-xs">Загрузите фотографию сотрудника</FieldDescription>
               <ImageUpload
                 value={field.value}
-                onChange={field.onChange}
+                onFileSelect={handleImageSelect}
+                onRemove={handleImageRemove}
+                isLocal={!!field.value && isLocalImage(field.value)}
+                aspectRatio={isDirector ? 3 / 4 : 3 / 2}
+                cropShape="rect"
               />
             </Field>
           )}

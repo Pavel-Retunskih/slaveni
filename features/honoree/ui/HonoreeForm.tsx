@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useCallback } from "react"
 import { Button } from "@/shared/components/ui/button"
 import { Input } from "@/shared/components/ui/input"
 import { Textarea } from "@/shared/components/ui/textarea"
@@ -9,7 +10,13 @@ import type { HonoreeFormValues, HonoreeFormPayload } from "@/shared/types/honor
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/shared/components/ui/field"
 import { Separator } from "@/shared/components/ui/separator"
 import { ImageUpload } from "@/shared/components/image-upload"
+import { uploadFile } from "@/shared/helpers/uploadFile"
 import type { ReactNode } from "react"
+
+type TempImage = {
+  file: File
+  url: string
+}
 
 interface HonoreeFormProps {
   initialData?: Partial<HonoreeFormValues>
@@ -18,11 +25,49 @@ interface HonoreeFormProps {
 }
 
 export function HonoreeForm({ initialData, onSubmitAction, onDeleteAction }: HonoreeFormProps) {
-  const { control, handleSubmit, formState: { isSubmitting, errors }, setError } = useFormContext<HonoreeFormValues>()
+  const { control, handleSubmit, formState: { isSubmitting, errors }, setValue, setError } = useFormContext<HonoreeFormValues>()
+
+  const [tempImage, setTempImage] = useState<TempImage | null>(null)
+
+  const isLocalImage = useCallback((url: string) => tempImage?.url === url, [tempImage])
+
+  const handleImageSelect = (file: File, previewUrl: string) => {
+    if (tempImage) {
+      URL.revokeObjectURL(tempImage.url)
+    }
+    setTempImage({ file, url: previewUrl })
+    setValue("photo", previewUrl, { shouldDirty: true })
+  }
+
+  const handleImageRemove = () => {
+    if (tempImage) {
+      URL.revokeObjectURL(tempImage.url)
+      setTempImage(null)
+    }
+    setValue("photo", "", { shouldDirty: true })
+  }
 
   const onSubmit = async (data: HonoreeFormValues) => {
     try {
-      await onSubmitAction(data)
+      let photoUrl = data.photo ?? ""
+      const uploadKeys: string[] = []
+
+      if (tempImage && isLocalImage(photoUrl)) {
+        const result = await uploadFile(tempImage.file)
+        photoUrl = result.url
+        uploadKeys.push(result.key)
+      }
+
+      await onSubmitAction({
+        ...data,
+        photo: photoUrl,
+        uploadKeys,
+      })
+
+      if (tempImage) {
+        URL.revokeObjectURL(tempImage.url)
+        setTempImage(null)
+      }
     } catch (error) {
       if (error instanceof Error && error.name === "ValidationError" && "fields" in error && typeof error.fields === "object" && error.fields !== null) {
         Object.entries(error.fields).forEach(([name, { message }]) => setError(name as keyof HonoreeFormValues, {
@@ -177,7 +222,11 @@ export function HonoreeForm({ initialData, onSubmitAction, onDeleteAction }: Hon
               <FieldDescription className="text-xs">Загрузите фотографию сотрудника (необязательно)</FieldDescription>
               <ImageUpload
                 value={field.value}
-                onChange={field.onChange}
+                onFileSelect={handleImageSelect}
+                onRemove={handleImageRemove}
+                isLocal={!!field.value && isLocalImage(field.value)}
+                aspectRatio={1}
+                cropShape="round"
               />
             </Field>
           )}

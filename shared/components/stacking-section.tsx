@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, ReactNode } from "react"
+import { useRef, useEffect, useState, ReactNode } from "react"
 import { motion, useScroll, useTransform } from "framer-motion"
 
 interface StackingSectionProps {
@@ -10,6 +10,21 @@ interface StackingSectionProps {
   className?: string
 }
 
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
+    setIsMobile(mql.matches)
+
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mql.addEventListener("change", handler)
+    return () => mql.removeEventListener("change", handler)
+  }, [breakpoint])
+
+  return isMobile
+}
+
 export function StackingSection({
   children,
   index,
@@ -17,6 +32,7 @@ export function StackingSection({
   className = "",
 }: StackingSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const isMobile = useIsMobile()
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -50,6 +66,14 @@ export function StackingSection({
   const isFirstSection = index === 0
   // Last section doesn't need scaling animation
   const isLastSection = index === totalSections - 1
+
+  if (isMobile) {
+    return (
+      <div ref={sectionRef} className={`relative ${className}`}>
+        {children}
+      </div>
+    )
+  }
 
   return (
     <motion.div

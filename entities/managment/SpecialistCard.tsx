@@ -6,13 +6,14 @@ import Image from "next/image"
 export const SpecialistCard = ({ specialist }: { specialist: ManagementDocument }) => {
     return (
         <Card className="overflow-hidden hover:shadow-lg h-full pt-0 transition-shadow">
-            <div className="relative bg-muted">
+            <div className="relative bg-muted aspect-3/2 overflow-hidden">
                 <Image
                     src={specialist?.image || "/placeholder.svg"}
                     alt={specialist?.position || ""}
-                    width={800}
-                    height={534}
-                    className="w-full h-auto object-contain"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover"
                 />
                 <Badge className="bg-white/90 absolute bottom-4 left-4 right-4 text-foreground hover:bg-white">
                     {specialist.department}

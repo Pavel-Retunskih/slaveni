@@ -10,6 +10,7 @@ type HonoreeJSON = {
     department: string
     achievement: string
     years: string
+    photo?: string
     createdAt: Date
     updatedAt: Date
 }

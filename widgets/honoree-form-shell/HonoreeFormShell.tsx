@@ -48,6 +48,7 @@ const honoreeSchema = z.object({
     department: z.string().min(2, "Отдел должен содержать не менее 2 символов"),
     achievement: z.string().min(10, "Описание достижений должно содержать не менее 10 символов"),
     years: z.string().min(1, "Стаж работы обязателен"),
+    photo: z.string().optional(),
 })
 
 export function HonoreeFormShell({ title, initialData, onSubmitAction, onDeleteAction }: Props) {
